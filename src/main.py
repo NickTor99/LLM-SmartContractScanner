@@ -11,8 +11,8 @@ import os
 load_dotenv()  # Carica le variabili da .env
 api_key = os.getenv("API_KEY")
 
-# Percorso al file contenente il contratto da analizzare
-path = "C:\\Users\\Smart\\Desktop\\contract.txt"
+# Carica il percorso al file contenente il contratto da analizzare
+path = get_valid_filepath()
 
 # Carica il contenuto del contratto come stringa
 code = load_string(path)

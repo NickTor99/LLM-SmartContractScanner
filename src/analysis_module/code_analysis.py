@@ -16,7 +16,7 @@ class CodeAnalysis:
         :param num_model: Numero di possibili vulnerabilità che il modello restituirà.
         """
         try:
-            self.prompt = load_string("prompts/code_analysis_prompt")
+            self.prompt = load_string("src/prompts/code_analysis_prompt")
         except Exception as e:
             logger.error(f"Errore nel caricamento del prompt per CodeAnalysis: {e}")
             raise RuntimeError("Impossibile caricare il prompt per CodeAnalysis.") from e

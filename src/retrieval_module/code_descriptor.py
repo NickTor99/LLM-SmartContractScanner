@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class CodeDescriptor:
     def __init__(self, llm_model: LLMModel):
         try:
-            self.prompt = load_string("prompts/code_description_prompt")
+            self.prompt = load_string("src/prompts/code_description_prompt")
         except Exception as e:
             logger.error(f"Errore nel caricamento del prompt di descrizione: {e}")
             raise RuntimeError("Impossibile caricare il prompt per CodeDescriptor.") from e

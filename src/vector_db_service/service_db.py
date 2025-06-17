@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
-from vector_db_client.contract_searcher import ContractSearcher
+from vector_db_service.contract_searcher import ContractSearcher
 
 app = FastAPI()
 

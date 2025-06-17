@@ -36,7 +36,7 @@ class VulnAnalysis:
         Costruisce il prompt da passare al modello LLM.
         """
         try:
-            system_prompt = load_string("prompts/vuln_analysis_prompt")
+            system_prompt = load_string("src/prompts/vuln_analysis_prompt")
 
             prompt = f"""
 ### Vulnerability to Analyze:
@@ -68,7 +68,7 @@ class VulnAnalysis:
         """
         Carica i dettagli della vulnerabilità da file.
         """
-        file_path = "analysis_module/algorand_vuln_info.json"
+        file_path = "src/analysis_module/algorand_vuln_info.json"
         with open(file_path, "r") as file:
             data = json.load(file)
 
