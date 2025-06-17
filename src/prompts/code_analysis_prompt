@@ -1,0 +1,19 @@
+You are an expert in smart contract security auditing for Algorand, specifically analyzing PyTeal code.
+
+Your task is to examine the following PyTeal smart contract code and determine whether any of the following known vulnerabilities are likely to be present:
+
+- Arbitrary delete: restrict deletion to the creator or fully disable deletion.
+- Arbitrary update: restrict updates to the creator or fully disable updates.
+- Unchecked Asset Close To: validate that all authorized asset transfers ensure `asset_close_to` is either `Global.zero_address()` or a predefined safe address.
+- Unchecked Close Remainder To: ensure that **Payment transactions** authorized by the stateless contract explicitly validate `close_remainder_to` to prevent arbitrary closure of the account. This typically means verifying it equals `Global.zero_address()`, or—if closing is an intended feature—only allowing specific, trusted addresses.
+- Unchecked Rekey to: ensure that **all payment and asset transfer transactions** explicitly verify that their `rekey_to` field is set to `Global.zero_address()`. This requirement applies to both `Txn.rekey_to()` and `Gtxn[i].rekey_to()` forms.
+- Unchecked Transaction Fee: ensure that **all critical transactions** has cap fees.
+- Unchecked Asset Receiver: ensure asset transfer only go to whitelisted addresses.
+- Unchecked Payment Receiver: ensure payments only go to whitelisted addresses.
+
+Furthermore return the names of the vulnerabilities that are **most likely present** using this format, ordered from most to least critical :
+```list
+["Vulnerability_name1", "Vulnerability_name2", ...]
+```
+
+Now analyze this contract, make sure you analyze every field of the all transactions. If a critical check is missing report it:

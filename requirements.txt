@@ -1,0 +1,12 @@
+requests
+openai
+instructor
+pydantic
+qdrant_client
+sentence_transformers
+numpy
+fastapi
+torch
+uvicorn
+python-multipart
+python-dotenv
