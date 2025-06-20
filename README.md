@@ -20,15 +20,27 @@ pip install -r requirements.txt
 
 ## 3. ⚙️Setup Instructions
 
-### Step 1: Pull the Vector Database Docker Image (Qdrant)
+### Step 1: Clone the repository
 
 ```bash
-docker pull niktor99/sc-vector-db:1.0
+git clone https://github.com/NickTor99/LLM-SmartContractScanner.git
 ```
 
-### Step 2: Start the Database
+Move to proget directory
+
 ```bash
-docker run niktor99/sc-vector-db:1.0
+cd path/to/LLM-SmartContractScanner
+```
+
+### Step 2: Pull the Vector Database Docker Image (Qdrant)
+
+```bash
+docker pull niktor99/sc-vector-db:1.1
+```
+
+### Step 3: Start the Database
+```bash
+docker run -p 6333:6333 niktor99/sc-vector-db:1.1
 ```
 
 ## 4. 🚀Run the Application
