@@ -1,5 +1,5 @@
 from openai import OpenAI
-from llm.llm_model import LLMModel
+from src.llm.llm_model import LLMModel
 import logging
 
 logger = logging.getLogger(__name__)

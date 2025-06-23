@@ -26,7 +26,9 @@ def map_vulnerability(name):
 
 
 def load_string(file_path: str) -> str:
-    with open(file_path, 'r', encoding='utf-8') as f:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(script_dir, file_path)
+    with open(path, 'r', encoding='utf-8') as f:
         return f.read()
 
 

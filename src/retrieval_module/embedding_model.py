@@ -8,7 +8,7 @@ class EmbeddingModel:
     def __init__(
             self,
             model_name: str = "hkunlp/instructor-xl",
-            device: str = "cuda",
+            device: str = "cpu",
             instruction: str = "Represent the semantic behavior of the smart contract for similarity-based retrieval."
     ):
         """

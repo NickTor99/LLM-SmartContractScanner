@@ -1,6 +1,4 @@
-import numpy as np
 from qdrant_client import QdrantClient
-from sentence_transformers import SentenceTransformer
 
 
 class ContractSearcher:
@@ -9,6 +7,7 @@ class ContractSearcher:
 
         # initialize Qdrant client
         self.qdrant_client = QdrantClient(url_db)
+
 
     def search_vulns(self, vector: list) -> list:
 

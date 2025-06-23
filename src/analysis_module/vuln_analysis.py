@@ -1,9 +1,12 @@
 import json
 import logging
-from llm.llm_model import LLMModel  # Assicurati di adattare l'import corretto
-from utils import load_string
+import os
+
+from src.llm.llm_model import LLMModel  # Assicurati di adattare l'import corretto
+from src.utils import load_string
 
 logger = logging.getLogger(__name__)
+
 
 class VulnAnalysis:
     def __init__(self, llm_model: LLMModel):
@@ -36,7 +39,7 @@ class VulnAnalysis:
         Costruisce il prompt da passare al modello LLM.
         """
         try:
-            system_prompt = load_string("src/prompts/vuln_analysis_prompt")
+            system_prompt = load_string("prompts/vuln_analysis_prompt")
 
             prompt = f"""
 ### Vulnerability to Analyze:
@@ -68,7 +71,8 @@ class VulnAnalysis:
         """
         Carica i dettagli della vulnerabilità da file.
         """
-        file_path = "src/analysis_module/algorand_vuln_info.json"
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = f"{base_dir}/algorand_vuln_info.json"
         with open(file_path, "r") as file:
             data = json.load(file)
 

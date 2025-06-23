@@ -1,4 +1,4 @@
-from llm.llm_model import LLMModel
+from src.llm.llm_model import LLMModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 import logging
@@ -15,7 +15,7 @@ class HFLLM(LLMModel):
         try:
             # Carica tokenizer e modello
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self.model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto")
+            self.model = AutoModelForCausalLM.from_pretrained(model_name)
         except Exception as e:
             logger.error(f"Errore durante il caricamento del modello LLM tramite HuggingFace: {e}")
             raise RuntimeError(f"Errore nel caricamento del modello: {model_name}") from e

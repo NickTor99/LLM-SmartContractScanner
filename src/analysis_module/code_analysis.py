@@ -1,7 +1,7 @@
 import json
 import re
-from llm.llm_model import LLMModel
-from utils import load_string
+from src.llm.llm_model import LLMModel
+from src.utils import load_string
 import logging
 from typing import List
 
@@ -16,7 +16,7 @@ class CodeAnalysis:
         :param num_model: Numero di possibili vulnerabilità che il modello restituirà.
         """
         try:
-            self.prompt = load_string("src/prompts/code_analysis_prompt")
+            self.prompt = load_string("prompts/code_analysis_prompt")
         except Exception as e:
             logger.error(f"Errore nel caricamento del prompt per CodeAnalysis: {e}")
             raise RuntimeError("Impossibile caricare il prompt per CodeAnalysis.") from e
