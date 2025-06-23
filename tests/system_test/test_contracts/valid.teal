@@ -1,0 +1,52 @@
+from pyteal import *
+
+def approval_program():
+    is_delete_application = And(
+        Txn.on_completion() == OnComplete.DeleteApplication,
+        Txn.application_id() != Int(0)
+    )
+
+    is_opt_in = Txn.on_completion() == OnComplete.OptIn
+
+    program = Seq([
+        Assert(Global.latest_timestamp() > Int(0)),
+
+        Cond(
+            [is_delete_application, Seq([
+                Log(Bytes("Delete Application")),
+                Return(Int(1))
+            ])],
+            [is_opt_in, Seq([
+                Log(Bytes("Opt-In Transaction")),
+                Return(Int(1))
+            ])]
+        ),
+
+        Log(Bytes("Contratto_approvato")),
+
+        If(Txn.amount() > Int(1000),
+           Log(Bytes("Transazione_superiore_1000_microalgo")),
+           Log(Bytes("Transazione_inferiore_1000_microalgo"))
+           ),
+
+        If(
+            Txn.rekey_to() != Global.zero_address(),
+            Seq([
+                Log(Bytes("Rekey Transaction Detected")),
+                Return(Int(0))
+            ])
+        ),
+
+        Return(Int(1))
+    ])
+    return program
+
+def clear_program():
+    program = Seq([
+        Log(Bytes("Clear eseguito")),
+        Return(Int(1))
+    ])
+    return program
+
+if __name__ == '__main__':
+    print(compileTeal(approval_program(), mode=Mode.Application, version=5))
