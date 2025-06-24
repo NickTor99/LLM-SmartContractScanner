@@ -1,5 +1,9 @@
 import unittest
+from json import JSONDecodeError
 from unittest.mock import MagicMock, patch
+
+import requests
+
 from src.retrieval_module.retrieval_engine import RetrievalEngine
 from requests.models import Response
 import json
@@ -45,9 +49,9 @@ class TestRetrievalEngine(unittest.TestCase):
 
     @patch("src.retrieval_module.retrieval_engine.requests.post")
     def test_get_similar_contracts_http_error(self, mock_post):
-        mock_post.side_effect = Exception("HTTP error")
+        mock_post.side_effect = requests.exceptions.RequestException()
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(requests.exceptions.RequestException):
             results = self.engine.get_similar_contracts("contract code")
 
 
@@ -58,11 +62,12 @@ class TestRetrievalEngine(unittest.TestCase):
         response._content = b"Not a JSON"
         mock_post.return_value = response
 
-        results = self.engine.get_similar_contracts("contract code")
+        with self.assertRaises(JSONDecodeError):
+            results = self.engine.get_similar_contracts("contract code")
 
-        self.assertEqual(results, [])
 
     def test_get_similar_contracts_descriptor_or_embedder_error(self):
         self.mock_descriptor.get_description.side_effect = Exception("fail")
-        results = self.engine.get_similar_contracts("contract code")
-        self.assertEqual(results, [])
+        with self.assertRaises(Exception):
+            results = self.engine.get_similar_contracts("contract code")
+

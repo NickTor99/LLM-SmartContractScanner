@@ -7,7 +7,8 @@ from src.analysis_module.vuln_analysis import VulnAnalysis
 from src.utils import *
 from dotenv import load_dotenv
 import os
-
+from pyteal import compileTeal, Mode, TealInputError, TealTypeError
+import ast
 
 def main(path: str = None):
 
@@ -20,6 +21,18 @@ def main(path: str = None):
 
     # Carica il contenuto del contratto come stringa
     code = load_string(path)
+
+    # Controllo: il codice non deve essere vuoto
+    if not code.strip():
+        print("Errore: il Codice è vuoto.")
+        return
+
+    # Controllo: in codice deve essere sintatticamente corretto
+    try:
+        ast.parse(code)
+    except SyntaxError as e:
+        print(f"Errore di sintassi nel codice inserito: {e}")
+        return
 
     # Inizializza un'istanza del modello LLM di OpenAI (in questo caso DeepSeek), passando chiave API e URL personalizzato
     llm = OpenAILLM(

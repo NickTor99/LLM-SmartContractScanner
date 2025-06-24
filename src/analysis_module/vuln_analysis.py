@@ -15,6 +15,7 @@ class VulnAnalysis:
         """
         self.llm_model = llm_model
 
+
     def get_vuln_analysis(self, vuln: str, code: str) -> str:
         """
         Analizza il codice in base alla vulnerabilità fornita.
@@ -35,8 +36,8 @@ class VulnAnalysis:
             logger.error(f"Chiave mancante nei dettagli della vulnerabilità: {e}")
             return f"Errore: Dettagli incompleti per la vulnerabilità {vuln}."
         except Exception as e:
-            logger.error(f"Errore inatteso durante l'analisi della vulnerabilità: {e}")
-            return f"Errore durante l'elaborazione della vulnerabilità {vuln}."
+            logger.error(f"Errore inatteso durante l'analisi della vulnerabilità tramite LLM: {e}")
+            raise
 
     def _get_prompt(self, vuln: str, details: dict, code: str) -> str:
         """

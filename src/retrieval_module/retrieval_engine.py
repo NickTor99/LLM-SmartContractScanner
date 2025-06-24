@@ -25,12 +25,16 @@ class RetrievalEngine:
         """
         Ottiene i contratti simili analizzando il codice tramite descrizione e vettori embedding.
         """
+        if code == "":
+            logger.error("Errore: il codice inserito è vuoto")
+            return []
+
         try:
             description = self.descriptor.get_description(code)
             vector = self.embedder.encode(description)
         except Exception as e:
             logger.error(f"Errore durante la generazione della descrizione o embedding: {e}")
-            return []
+            raise
 
         try:
             response = requests.post(self.url, json={"vector": vector}, timeout=10)
@@ -43,7 +47,7 @@ class RetrievalEngine:
             return self._filter_response(response)
         except (json.JSONDecodeError, KeyError) as e:
             logger.error(f"Errore nel parsing della risposta del servizio di retrieval: {e}")
-            return []
+            raise
 
     def _filter_response(self, response: Response) -> list:
         """

@@ -1,43 +1,4 @@
-# invalid_contract.pyteal
-""" PyTeal non valido per test di errore - DO NOT USE IN PRODUCTION """
 from pyteal import *
 
-def buggy_contract():
-    # 1. Tipo di ritorno non valido (manca Return)
-    result = Concat(Bytes("Start"), Int(123))  # Errore: Int non convertito a bytes
-
-    # 2. Operazione non supportata
-    illegal_op = Div(Bytes("abc"), Bytes("def"))  # Divisione tra bytes non permessa
-
-    # 3. Riferimento a variabile non definita
-    undefined_var = x + y  # x e y non esistono
-
-    # 4. Condizione sempre vera con side effect pericoloso
-    If(Int(1), [
-        Assert(Int(0)),  # Assert che fallisce sempre
-        App.globalPut(Bytes("admin"), Int(1))  # Scrittura non autorizzata
-    ])
-
-    # 5. Chiamata a funzione inesistente
-    non_existent_function()
-
-    # 6. Tipo di parametro errato
-    invalid_txn = Txn.sender(Bytes("fake_sender"))  # sender() non accetta parametri
-
-    # 7. Logica di controllo vulnerabile (reentrancy-like)
-    If(Gtxn[0].type_enum() == TxnType.Payment, [
-        Seq([
-            InnerTxnBuilder.Begin(),
-            InnerTxnBuilder.SetFields({
-                "type_enum": TxnType.AssetTransfer,
-                "asset_amount": Int(1000000)  # Valore arbitrario alto
-            }),
-            InnerTxnBuilder.Submit()
-        ])
-    ])
-
-# 8. Manca completamente la parte di approvazione
-# Nessuna route HandleCreate/HandleUpdate/etc.
-
-# 9. Compilazione forzata nonostante gli errori
-compileTeal(buggy_contract(), mode=Mode.Application, version=6)
+def approval()
+    return Approve()

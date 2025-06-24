@@ -16,19 +16,19 @@ class TestSystemMain(unittest.TestCase):
     def test_valid_contract(self, mock_stdout):
         main(get_abs_path("valid.teal"))
         output = mock_stdout.getvalue()
-        self.assertIn("Analisi completata", output)  # o un'altra frase che conferma il successo
+        self.assertIn("Analisi completata", output)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_empty_contract(self, mock_stdout):
         main(get_abs_path("empty.teal"))
         output = mock_stdout.getvalue()
-        self.assertIn("Codice vuoto", output)  # sostituisci con il messaggio effettivo
+        self.assertIn("Codice è vuoto", output)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_invalid_contract(self, mock_stdout):
         main(get_abs_path("invalid.teal"))
         output = mock_stdout.getvalue()
-        self.assertIn("Errore durante l'analisi", output)  # sostituisci con il messaggio atteso
+        self.assertIn("Errore di sintassi", output)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_file_not_found(self, mock_stdout):

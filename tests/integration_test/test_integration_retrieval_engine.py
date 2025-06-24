@@ -1,6 +1,9 @@
 import json
 import unittest
 from unittest.mock import MagicMock, patch
+
+import requests
+
 from src.retrieval_module.retrieval_engine import RetrievalEngine
 from src.retrieval_module.embedding_model import EmbeddingModel
 from src.retrieval_module.code_descriptor import CodeDescriptor
@@ -46,7 +49,7 @@ class TestRetrievalEngineIntegration(unittest.TestCase):
     @patch("src.retrieval_module.retrieval_engine.requests.post")
     def test_retrieval_empty_code(self, mock_post):
         #Mock delle risposte di dipendenze esterne
-        self.embedder.encode = MagicMock(return_value=[0.2, 0.4, 0.5]) #codice vuoto fa comunque restituire un vettore pieno
+        self.embedder.encode = MagicMock(return_value=[0.2, 0.4, 0.5]) # codice vuoto fa comunque restituire un vettore pieno
         self.llm_model.generate = MagicMock(return_value="")
 
         mock_post.return_value = self.create_fake_response({
@@ -64,18 +67,16 @@ class TestRetrievalEngineIntegration(unittest.TestCase):
         self.llm_model.generate = MagicMock(return_value="il codice fa questo...")
 
         code = "sample code"
-        result = self.engine.get_similar_contracts(code)
-        self.assertIsInstance(result, list)
-        self.assertTrue(len(result) == 0)
+        with self.assertRaises(Exception):
+            result = self.engine.get_similar_contracts(code)
 
     def test_descriptor_failure(self):
         self.embedder.encode = MagicMock(return_value=[0.2, 0.4, 0.5]) #codice vuoto fa comunque restituire un vettore pieno
         self.descriptor.get_description = MagicMock(side_effect=Exception())
 
         code = "sample code"
-        result = self.engine.get_similar_contracts(code)
-        self.assertIsInstance(result, list)
-        self.assertTrue(len(result) == 0)
+        with self.assertRaises(Exception):
+            result = self.engine.get_similar_contracts(code)
 
     @patch("src.retrieval_module.retrieval_engine.requests.post")
     def test_searcher_failure(self, mock_post):
@@ -86,9 +87,8 @@ class TestRetrievalEngineIntegration(unittest.TestCase):
         mock_post.return_value = response_error
 
         code = "sample code"
-        result = self.engine.get_similar_contracts(code)
-        self.assertIsInstance(result, list)
-        self.assertTrue(len(result) == 0)
+        with self.assertRaises(requests.exceptions.RequestException):
+            result = self.engine.get_similar_contracts(code)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,7 +1,5 @@
 requests
 openai
-instructor
-pydantic
 qdrant_client
 sentence_transformers
 numpy
@@ -10,3 +8,6 @@ torch
 uvicorn
 python-multipart
 python-dotenv
+pytest
+coverage
+pyteal

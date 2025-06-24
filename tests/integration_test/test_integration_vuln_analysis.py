@@ -34,7 +34,6 @@ class TestCodeAnalysisIntegration(unittest.TestCase):
             "precondition": "condizione"
         }]
     }))
-
     def test_code_analysis_llm_failure(self, mock_file, mock_load_string):
         code = "contract code"
         vuln = "example_vuln"

@@ -18,7 +18,7 @@ class TestCodeDescriptor(unittest.TestCase):
         self.assertEqual(descriptor.llm_model, mock_llm)
 
     @patch("src.retrieval_module.code_descriptor.load_string", side_effect=Exception("File non trovato"))
-    def T(self, mock_load_string):
+    def test_init_failure(self, mock_load_string):
 
         mock_llm = MagicMock()
 
