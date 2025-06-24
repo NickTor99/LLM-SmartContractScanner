@@ -28,10 +28,22 @@ class HFLLM(LLMModel):
                 tokenizer=self.tokenizer,
                 device=device
             )
+            self.max_input_tokens = self.generator.model.config.max_position_embeddings
         except Exception as e:
             logger.error(f"Errore durante il caricamento della pipeline del modello LLM HuggingFace: {e}")
             raise RuntimeError(f"Errore nel caricamento della pipeline: {model_name}") from e
 
     def generate(self, prompt: str) -> str:
-        result = self.generator(prompt, max_new_tokens=512, do_sample=True, top_p=0.95, temperature=0.7)
-        return result[0]["generated_text"]
+        try:
+            result = self.generator(prompt, do_sample=True, top_p=0.95, temperature=0.1)
+            return result[0]["generated_text"]
+
+        except Exception as e:
+            num_tokens = len(self.tokenizer.encode(prompt))
+            if num_tokens > self.max_input_tokens:
+                logger.error(f"Prompt troppo lungo: {num_tokens} token (limite: {self.max_input_tokens})")
+            else:
+                logger.error(f"Errore durante la generazione del testo: {e}")
+            raise
+
+

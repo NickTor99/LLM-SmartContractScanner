@@ -37,7 +37,7 @@ class RetrievalEngine:
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             logger.error(f"Errore nella richiesta HTTP al servizio di retrieval: {e}")
-            return []
+            raise
 
         try:
             return self._filter_response(response)

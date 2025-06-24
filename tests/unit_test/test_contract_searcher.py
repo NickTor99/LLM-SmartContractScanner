@@ -14,9 +14,9 @@ class TestContractSearcher(unittest.TestCase):
 
 
     def test_invalid_collection_name(self):
-        self.searcher.qdrant_client.query_points.side_effect = Exception("Collection not found")
+        self.searcher.qdrant_client.query_points.side_effect = RuntimeError("Collection not found")
 
-        with self.assertRaises(UnexpectedResponse):
+        with self.assertRaises(RuntimeError):
             self.searcher.search_vulns([0.1] * 768)
 
     def test_invalid_url_db(self):

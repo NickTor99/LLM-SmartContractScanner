@@ -19,6 +19,10 @@ class VulnAnalysis:
         """
         Analizza il codice in base alla vulnerabilità fornita.
         """
+        if code == "":
+            logger.error("Errore prompt in Vuln Analysis vuoto")
+            raise Exception("Errore prompt in Vuln Analysis vuoto")
+
         try:
             details = self._get_vuln_details(vuln)
             prompt = self._get_prompt(vuln, details, code)

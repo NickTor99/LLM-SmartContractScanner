@@ -19,6 +19,7 @@ class EmbeddingModel:
 
         try:
             self.model = SentenceTransformer(model_name, device=device)
+            self.max_length = self.model.tokenizer.model_max_length
         except Exception as e:
             logger.error(f"Errore durante il caricamento del modello di embedding: {e}")
             raise RuntimeError(f"Errore nel caricamento del modello: {model_name}") from e
@@ -28,6 +29,10 @@ class EmbeddingModel:
         """
         Genera un vettore embedding a partire da un testo.
         """
+        total_input = f"{self.instruction} {text}"
+        token_count = len(self.model.tokenizer.tokenize(total_input))
+        if token_count > self.max_length:
+            raise Exception(f"Input troppo lungo: {token_count} token (max {self.max_length})")
         try:
             input_data = [[self.instruction, text]]
             embedding = self.model.encode(input_data)

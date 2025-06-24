@@ -50,7 +50,6 @@ class TestRetrievalEngine(unittest.TestCase):
         with self.assertRaises(Exception):
             results = self.engine.get_similar_contracts("contract code")
 
-        self.assertEqual(results, [])
 
     @patch("src.retrieval_module.retrieval_engine.requests.post")
     def test_get_similar_contracts_invalid_json(self, mock_post):
