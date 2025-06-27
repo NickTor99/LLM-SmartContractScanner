@@ -7,7 +7,6 @@ from src.analysis_module.vuln_analysis import VulnAnalysis
 from src.utils import *
 from dotenv import load_dotenv
 import os
-from pyteal import compileTeal, Mode, TealInputError, TealTypeError
 import ast
 
 def main(path: str = None):

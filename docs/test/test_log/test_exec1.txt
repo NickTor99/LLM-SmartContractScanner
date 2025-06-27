@@ -1,0 +1,956 @@
+(venv) PS C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner> coverage run -m pytest tests/
+======================================================================================================= test session starts =======================================================================================================
+platform win32 -- Python 3.11.5, pytest-8.4.1, pluggy-1.6.0
+rootdir: C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner
+plugins: anyio-4.9.0
+collected 72 items                                                                                                                                                                                                                 
+
+tests\integration_test\test_integration_code_analysis.py ..                                                                                                                                                                  [  2%] 
+tests\integration_test\test_integration_retrieval_engine.py ..F..                                                                                                                                                            [  9%]
+tests\integration_test\test_integration_vuln_analysis.py F.                                                                                                                                                                  [ 12%]
+tests\system_test\test_system.py .F.F.                                                                                                                                                                                       [ 19%]
+tests\unit_test\test_HFLLM.py .F...                                                                                                                                                                                          [ 26%]
+tests\unit_test\test_code_analysis.py ........                                                                                                                                                                               [ 37%]
+tests\unit_test\test_code_descriptor.py ...                                                                                                                                                                                  [ 41%]
+tests\unit_test\test_contract_searcher.py F....                                                                                                                                                                              [ 48%]
+tests\unit_test\test_embedding_model.py .F.F.                                                                                                                                                                                [ 55%]
+tests\unit_test\test_openai_llm.py FFFF.                                                                                                                                                                                     [ 62%]
+tests\unit_test\test_retrieval_engine.py .F..                                                                                                                                                                                [ 68%]
+tests\unit_test\test_utils.py ................                                                                                                                                                                               [ 90%]
+tests\unit_test\test_vuln_analysis.py .F.....                                                                                                                                                                                [100%]
+
+============================================================================================================ FAILURES ============================================================================================================= 
+____________________________________________________________________________________ TestRetrievalEngineIntegration.test_retrieval_empty_code _____________________________________________________________________________________ 
+
+self = <test_integration_retrieval_engine.TestRetrievalEngineIntegration testMethod=test_retrieval_empty_code>, mock_post = <MagicMock name='post' id='2521306273424'>
+
+    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    def test_retrieval_empty_code(self, mock_post):
+        #Mock delle risposte di dipendenze esterne
+        self.embedder.encode = MagicMock(return_value=[0.2, 0.4, 0.5]) #codice vuoto fa comunque restituire un vettore pieno
+        self.llm_model.generate = MagicMock(return_value="")
+
+        mock_post.return_value = self.create_fake_response({
+            "result": [
+                {"vulnerability": "arbitrary_delete", "score": 0.9},
+                {"vulnerability": "rekey_to", "score": 0.85}
+            ]
+        })
+
+        result = self.engine.get_similar_contracts("")
+>       self.assertTrue(len(result) == 0) #se il codice è vuoto non devono essere rilevati contratti vulnerabili
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: False is not true
+
+tests\integration_test\test_integration_retrieval_engine.py:60: AssertionError
+___________________________________________________________________________________ TestCodeAnalysisIntegration.test_code_analysis_llm_failure ____________________________________________________________________________________ 
+
+self = <test_integration_vuln_analysis.TestCodeAnalysisIntegration testMethod=test_code_analysis_llm_failure>, mock_file = <MagicMock name='open' id='2521294757520'>
+mock_load_string = <MagicMock name='load_string' id='2521288589136'>
+
+    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
+        "vulnerabilities": [{
+            "name": "example_vuln",
+            "description": "descrizione",
+            "attack_scenario": "scenario",
+            "precondition": "condizione"
+        }]
+    }))
+
+    def test_code_analysis_llm_failure(self, mock_file, mock_load_string):
+        code = "contract code"
+        vuln = "example_vuln"
+        self.llm.generate.side_effect = Exception("LLM crashed")
+>       with self.assertRaises(Exception):
+E       AssertionError: Exception not raised
+
+tests\integration_test\test_integration_vuln_analysis.py:42: AssertionError
+-------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
+ERROR    src.analysis_module.vuln_analysis:vuln_analysis.py:34 Errore inatteso durante l'analisi della vulnerabilità: LLM crashed
+_______________________________________________________________________________________________ TestSystemMain.test_empty_contract ________________________________________________________________________________________________ 
+
+self = <test_system.TestSystemMain testMethod=test_empty_contract>, mock_stdout = <_io.StringIO object at 0x0000024B0878FBE0>
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_empty_contract(self, mock_stdout):
+        main(get_abs_path("empty.teal"))
+        output = mock_stdout.getvalue()
+>       self.assertIn("Codice vuoto", output)  # sostituisci con il messaggio effettivo
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: 'Codice vuoto' not found in 'Model List: [\'Unchecked Close Remainder To\', \'Unchecked Rekey to\']\n\n\nRetrieved List: []\n\n\n--------------------------------------------------\n\nGiven that the contra
+ct code was not provided in your request, I cannot perform the analysis. However, I can guide you through how the analysis would be structured if the code were provided, using the `close_remainder_to` vulnerability as an example
+.\n\n---\n\n### Step 1 – Contract Type Classification:\n1. **Determine the contract type:**  \n   - If the code contains `Approve()` or `Reject()` and does not involve global/local state or `OnComplete` actions, it is likely a *
+*smart signature** (stateless).  \n   - If the code involves state variables (`App.globalPut`, `App.localPut`) or handles `OnComplete` actions (e.g., `Txn.on_completion() == OnComplete.NoOp`), it is a **smart contract (applicati
+on)**.  \n\n2. **Describe the contract\'s functionality:**  \n   - For a smart signature, describe the conditions under which it approves/rejects transactions (e.g., verifying a payment amount, checking a receiver address).  \n 
+  - For a smart contract, describe the state changes, application calls, or other logic (e.g., escrow, voting, token issuance).  \n\n   **Example for a smart signature:**  \n   If the code checks that a payment transaction sends
+ exactly 1000 microAlgos to a specific address, its primary purpose is to authorize such payments.\n\n---\n\n### Step 2 – Vulnerability Assessment:\n1. **Check Applicability:**  \n   - The `close_remainder_to` vulnerability is *
+*only applicable to smart signatures** that authorize payment transactions. If the contract is a smart contract (application), this vulnerability does not apply.  \n\n2. **Analyze for the Specific Vulnerability:**  \n   - For a 
+smart signature, check if the code explicitly validates the `close_remainder_to` field in payment transactions.  \n   - The code should either:  \n     - Ensure `close_remainder_to` is set to `Global.zero_address()` (no remainde
+r sent), or  \n     - Restrict it to a specific, hardcoded address (e.g., the sender or a trusted escrow).  \n   - If there is no such check, the contract is vulnerable.  \n\n   **Example vulnerable code snippet (PyTeal):**  \n 
+  ```python\n   from pyteal import *\n\n   program = And(\n       Txn.type_enum() == TxnType.Payment,\n       Txn.amount() == Int(1000),\n       Txn.receiver() == Addr("RECEIVER_ADDRESS")\n       # Missing check for Txn.close_re
+mainder_to()\n   )\n   ```\n   This allows an attacker to set `close_remainder_to` to their address and drain the account.  \n\n   **Example fixed code snippet:**  \n   ```python\n   program = And(\n       Txn.type_enum() == Txn
+Type.Payment,\n       Txn.amount() == Int(1000),\n       Txn.receiver() == Addr("RECEIVER_ADDRESS"),\n       Or(\n           Txn.close_remainder_to() == Global.zero_address(),\n           Txn.close_remainder_to() == Txn.sender()
+  # Only allow sending remainder back to sender\n       )\n   )\n   ```\n\n---\n\n### Step 3 – Final Evaluation:\nBased on the analysis:  \n- **Vulnerable:** If the smart signature authorizes payments without validating `close_r
+emainder_to`.  \n- **Not Vulnerable:** If the contract is a smart application or if the smart signature properly restricts `close_remainder_to`.  \n- **Potentially Vulnerable:** If the validation is incomplete (e.g., only checks
+ for zero address in some cases).  \n\n---\n\n### Request for Code:\nTo proceed with the analysis, please provide the PyTeal or TEAL code of the contract you\'d like to evaluate. I can then perform the full three-step analysis f
+or the `close_remainder_to` vulnerability or any other specific issue.--------------------------------------------------\n\nGiven that the provided PyTeal code snippet is incomplete (it ends abruptly without showing the actual c
+ontract code), I\'ll provide a general framework for how the analysis would be conducted if we had the complete code, and then I\'ll demonstrate with a hypothetical example.\n\n## General Analysis Framework for Rekey-To Vulnerab
+ility:\n\n### Step 1 – Contract Type Classification:\n1. **Determine contract type** by looking for:\n   - `Mode.Signature` → Smart signature\n   - `Mode.Application` → Smart contract\n   - Approval/Clear programs → Smart contra
+ct\n   - Global/Local state operations → Smart contract\n\n2. **Functionality analysis**:\n   - For smart signatures: Check what transactions it authorizes (payment, asset transfer, etc.)\n   - For smart contracts: Examine OnCom
+plete actions and state changes\n\n### Step 2 – Vulnerability Assessment:\nFor **rekey_to** vulnerability specifically:\n1. Check if this is a smart signature authorizing transactions\n2. Examine if the code validates the RekeyT
+o field (should be set to ZeroAddress)\n3. Look for transaction validation that might miss this field\n\n### Step 3 – Final Evaluation:\nBased on whether:\n- The code properly checks RekeyTo field (not vulnerable)\n- The code ig
+nores RekeyTo field (vulnerable)\n- The check is ambiguous (potentially vulnerable)\n\n## Example Analysis with Hypothetical Code:\n\nLet\'s assume we had this complete smart signature:\n\n```pyteal\nfrom pyteal import *\n\ndef 
+approval_program():\n    # Check sender is authorized\n    sender_check = Txn.sender() == Addr("AUTHORIZED_ACCOUNT")\n    \n    # Check fee is reasonable\n    fee_check = Txn.fee() <= Int(1000)\n    \n    # Check type is payment
+\n    type_check = Txn.type_enum() == TxnType.Payment\n    \n    # Combine checks\n    return And(sender_check, fee_check, type_check)\n\nif __name__ == "__main__":\n    print(compileTeal(approval_program(), mode=Mode.Signature,
+ version=5))\n```\n\n### Step 1 – Contract Type Classification:\n- **Contract Type**: Smart signature (evidenced by `mode=Mode.Signature`)\n- **Functionality**: Authorizes payment transactions from a specific account with reason
+able fees\n\n### Step 2 – Vulnerability Assessment:\n- **Applicability**: Yes, this is a smart signature authorizing payment transactions where rekey_to could be relevant\n- **Analysis**: The code checks:\n  - Sender address\n  
+- Transaction fee\n  - Transaction type\n  But **missing** any check of `Txn.rekey_to()`\n  \nThis means an attacker could submit a transaction that:\n1. Passes all these checks\n2. Has `rekey_to` set to their address\n3. Would 
+transfer control of the account\n\n### Step 3 – Final Evaluation:\n- **Vulnerability Status**: Vulnerable\n- **Reason**: The smart signature fails to validate the RekeyTo field, allowing account takeover\n\n## Secure Version Exa
+mple:\n\nA secure version would include:\n```pyteal\nrekey_check = Txn.rekey_to() == Global.zero_address()\nreturn And(sender_check, fee_check, type_check, rekey_check)\n```\n\nWithout seeing the actual complete code you want analyzed, this is the general approach that would be taken. For a specific analysis, please provide the complete smart contract code.\nAnalisi completata!\n'
+
+tests\system_test\test_system.py:25: AssertionError
+------------------------------------------------------------------------------------------------------ Captured stderr call ------------------------------------------------------------------------------------------------------- 
+Error during conversion: ChunkedEncodingError(ProtocolError('Response ended prematurely'))
+-------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
+ERROR    src.retrieval_module.retrieval_engine:retrieval_engine.py:39 Errore nella richiesta HTTP al servizio di retrieval: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/search_vulns (Cause
+d by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024B095AE550>: Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione'))
+______________________________________________________________________________________________ TestSystemMain.test_invalid_contract _______________________________________________________________________________________________ 
+
+self = <test_system.TestSystemMain testMethod=test_invalid_contract>, mock_stdout = <_io.StringIO object at 0x0000024B099657E0>
+
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_invalid_contract(self, mock_stdout):
+        main(get_abs_path("invalid.teal"))
+        output = mock_stdout.getvalue()
+>       self.assertIn("Errore durante l'analisi", output)  # sostituisci con il messaggio atteso
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: "Errore durante l'analisi" not found in 'Model List: [\'Arbitrary update\', \'Unchecked Asset Receiver\']\n\n\nRetrieved List: []\n\n\n--------------------------------------------------\n\n### Step 1 – Co
+ntract Type Classification:\n\n* **Determine the contract type:** The provided code is a **smart contract (application)**. This is evident because:\n  - It uses `Mode.Application` in the `compileTeal` call, which is specific to 
+smart contracts (applications).\n  - It includes operations like `App.globalPut`, `InnerTxnBuilder`, and `Gtxn`, which are typically used in smart contracts (not smart signatures).\n  - There is no clear approval logic (e.g., `A
+pprove()` or `Reject()`), but the presence of application-level operations confirms it is a smart contract.\n\n* **Describe the contract\'s functionality:** The contract appears to be a **buggy or intentionally invalid** smart c
+ontract for testing purposes (as noted in the comment). It contains multiple errors and undefined behaviors:\n  - Invalid type handling (e.g., `Concat` with `Int` instead of `Bytes`).\n  - Unsupported operations (e.g., division 
+between `Bytes`).\n  - Undefined variables (`x + y`).\n  - Always-true conditions with dangerous side effects (e.g., `Assert(Int(0))` that will always fail, followed by unauthorized global state writes).\n  - Calls to non-existe
+nt functions (`non_existent_function()`).\n  - Incorrect transaction parameter usage (`Txn.sender(Bytes("fake_sender"))`).\n  - Reentrancy-like logic (arbitrary asset transfers triggered by a payment).\n  - Missing approval logi
+c (no `OnComplete` handlers or routing).\n\n### Step 2 – Vulnerability Assessment:\n\n* **Check Applicability:** The vulnerability to analyze is **arbitrary_update**, which applies to contracts that handle `OnComplete.UpdateAppl
+ication`. The provided code does not include any `OnComplete` handlers or update logic. By default, Algorand smart contracts **do not allow updates unless explicitly programmed to do so**. Thus, the vulnerability is **not applic
+able** to this contract because:\n  - There is no `OnComplete.UpdateApplication` handling.\n  - The contract lacks any approval logic (`Approve()` or `Reject()`) for updates.\n  - Attempting to update this contract would fail be
+cause the contract does not support updates.\n\n* **Analyze for the Specific Vulnerability:** The code does not contain any logic to handle `UpdateApplication` or any other `OnComplete` action. The absence of update logic means 
+the contract cannot be updated after deployment. Therefore, the **arbitrary_update** vulnerability cannot be exploited in this case.\n\n### Step 3 – Final Evaluation:\n\n* **Determine Vulnerability Status:** The contract is **no
+t vulnerable** to the **arbitrary_update** vulnerability because:\n  - The contract does not handle `OnComplete.UpdateApplication`.\n  - By default, Algorand smart contracts cannot be updated unless explicitly programmed to allo
+w updates.\n  - The lack of approval logic further ensures that no updates are possible.\n\n### Additional Notes:\nWhile the contract is not vulnerable to **arbitrary_update**, it contains numerous other critical issues (e.g., t
+ype errors, undefined variables, dangerous side effects) that would prevent it from being deployed or functioning correctly. These issues are unrelated to the specific vulnerability being analyzed.-------------------------------
+-------------------\n\n### Step 1 – Contract Type Classification:\n\n**Contract Type:** Smart Contract (Application)\n\n**Reasoning:** \n- The code uses `App.globalPut`, which is a function specific to stateful smart contracts (
+applications) for writing to global state.\n- It includes `InnerTxnBuilder` operations, which are only available in application contracts for creating inner transactions.\n- The contract is compiled with `mode=Mode.Application`,
+ explicitly indicating it\'s an application contract.\n- There\'s no approval/clear program structure typical of smart signatures, and the code attempts to handle transaction logic directly.\n\n**Functionality Description:**\nTh
+is is a deliberately buggy contract demonstrating multiple anti-patterns and errors. While not functional, it appears to attempt:\n1. String concatenation with invalid types\n2. Illegal byte operations\n3. Reference to undefined
+ variables\n4. Dangerous always-true conditions with side effects\n5. Calls to non-existent functions\n6. Incorrect transaction field usage\n7. A potentially dangerous asset transfer logic that could send large amounts without p
+roper checks\n8. Missing standard approval handling for application contracts\n\nThe contract lacks coherent functionality due to its intentionally erroneous nature, but the presence of `App.globalPut` and `InnerTxnBuilder` sugg
+ests it was meant to be a stateful application that might handle asset transfers.\n\n### Step 2 – Vulnerability Assessment:\n\n**Vulnerability to Check:** Unchecked_Asset_Receiver\n\n**Applicability:**\nThe vulnerability is pote
+ntially applicable because:\n1. The contract contains asset transfer logic (seen in the `InnerTxnBuilder.SetFields` with `TxnType.AssetTransfer`)\n2. There\'s no visible validation of the asset receiver address\n3. The asset tra
+nsfer amount is hardcoded to a high value (`1000000`)\n\n**Analysis:**\nThe relevant code section is:\n```pyteal\nIf(Gtxn[0].type_enum() == TxnType.Payment, [\n    Seq([\n        InnerTxnBuilder.Begin(),\n        InnerTxnBuilder
+.SetFields({\n            "type_enum": TxnType.AssetTransfer,\n            "asset_amount": Int(1000000)  # Valore arbitrario alto\n        }),\n        InnerTxnBuilder.Submit()\n    ])\n])\n```\n\nKey issues:\n1. **Missing Recei
+ver Check:** The asset transfer transaction doesn\'t specify or validate the `asset_receiver` field at all. This would default to the sender address, but there\'s no mechanism to ensure the receiver is authorized.\n2. **No Amoun
+t Validation:** The asset amount is hardcoded to a large value without any checks against contract state or balances.\n3. **Trigger Condition:** The transfer is triggered by any payment transaction (Gtxn[0].type_enum() == TxnTyp
+e.Payment), which is overly permissive.\n\nThis could allow:\n- Assets to be sent to unintended addresses if the receiver isn\'t properly set\n- Drainage of contract assets since there are no checks on amounts\n- Potential misus
+e if combined with other vulnerabilities in the contract\n\n### Step 3 – Final Evaluation:\n\n**Vulnerability Status:** Vulnerable\n\n**Reasons:**\n1. The contract contains asset transfer functionality without proper validation 
+of the receiver address.\n2. The asset transfer is triggered without proper authorization checks.\n3. The amount being transferred isn\'t validated against any constraints.\n4. The contract lacks any mechanism to ensure the asse
+t receiver is the intended party.\n\nWhile the contract has many other issues (as it\'s intentionally buggy), it clearly demonstrates the Unchecked_Asset_Receiver vulnerability in its asset transfer logic. An attacker could pote
+ntially exploit this to:\n- Redirect assets to unauthorized addresses if they can influence the transaction group\n- Drain assets from the contract due to the unchecked amount\n- Bypass any intended recipient checks that should 
+be present\n\n**Note:** This is a deliberately invalid contract for testing purposes, and in a real scenario, all these issues would need to be addressed before deployment. The presence of multiple other severe errors makes this contract completely unsafe for production use.\nAnalisi completata!\n'
+
+tests\system_test\test_system.py:31: AssertionError
+-------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
+ERROR    src.retrieval_module.retrieval_engine:retrieval_engine.py:39 Errore nella richiesta HTTP al servizio di retrieval: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/search_vulns (Cause
+d by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024B08F8CE50>: Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione'))
+_______________________________________________________________________________________________ TestHFLLM.test_generate_long_prompt _______________________________________________________________________________________________ 
+
+self = <test_HFLLM.TestHFLLM testMethod=test_generate_long_prompt>
+
+    def test_generate_long_prompt(self):
+        model = HFLLM(model_name="sshleifer/tiny-gpt2", device="cpu")
+        long_prompt = "Smart contract logic. " * 1000  # Crea un prompt molto lungo
+        with self.assertRaises(Exception) as context:
+            model.generate(long_prompt)
+>       self.assertIn("prompt non valido o troppo lungo", str(context.exception))
+E       AssertionError: 'prompt non valido o troppo lungo' not found in 'index out of range in self'
+
+tests\unit_test\test_HFLLM.py:28: AssertionError
+------------------------------------------------------------------------------------------------------ Captured stderr call ------------------------------------------------------------------------------------------------------- 
+Device set to use cpu
+Token indices sequence length is longer than the specified maximum sequence length for this model (4001 > 1024). Running this sequence through the model will result in indexing errors
+Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.
+________________________________________________________________________________________ TestContractSearcher.test_invalid_collection_name ________________________________________________________________________________________ 
+
+self = <test_contract_searcher.TestContractSearcher testMethod=test_invalid_collection_name>
+
+    def test_invalid_collection_name(self):
+        self.searcher.qdrant_client.query_points.side_effect = Exception("Collection not found")
+
+        with self.assertRaises(UnexpectedResponse):
+>           self.searcher.search_vulns([0.1] * 768)
+
+tests\unit_test\test_contract_searcher.py:20:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src\vector_db_service\contract_searcher.py:15: in search_vulns
+    search_result = self.qdrant_client.query_points(
+..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1124: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1128: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _execute_mock_call(self, /, *args, **kwargs):
+        # separate from _increment_mock_call so that awaited functions are
+        # executed separately from their call, also AsyncMock overrides this method
+
+        effect = self.side_effect
+        if effect is not None:
+            if _is_exception(effect):
+>               raise effect
+E               Exception: Collection not found
+
+..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1183: Exception
+___________________________________________________________________________________ TestEmbeddingModelRealModel.test_encode_exceeds_max_tokens ____________________________________________________________________________________ 
+
+self = <test_embedding_model.TestEmbeddingModelRealModel testMethod=test_encode_exceeds_max_tokens>
+
+    def test_encode_exceeds_max_tokens(self):
+        # Costruiamo una stringa che sicuramente eccede i token massimi (es. > 2048 token)
+        long_text = "This is a line of the smart contract. " * 100000  # Ripetizione = ~10k token
+
+>       with self.assertRaises(Exception):
+E       AssertionError: Exception not raised
+
+tests\unit_test\test_embedding_model.py:35: AssertionError
+_______________________________________________________________________________________ TestEmbeddingModelRealModel.test_encode_valid_input _______________________________________________________________________________________ 
+
+self = <test_embedding_model.TestEmbeddingModelRealModel testMethod=test_encode_valid_input>
+
+    def test_encode_valid_input(self):
+        text = "This is a simple smart contract function."
+        embedding = self.embedding_model.encode(text)
+        self.assertIsInstance(embedding, list)
+>       self.assertTrue(len(embedding) > 0)
+E       AssertionError: False is not true
+
+tests\unit_test\test_embedding_model.py:28: AssertionError
+-------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
+ERROR    src.retrieval_module.embedding_model:embedding_model.py:36 Errore durante la generazione dell'embedding: Encoding error
+___________________________________________________________________________________________ TestOpenAILLM.test_generate_invalid_apikey ____________________________________________________________________________________________ 
+
+self = <test_openai_llm.TestOpenAILLM testMethod=test_generate_invalid_apikey>
+
+    def test_generate_invalid_apikey(self):
+        model = OpenAILLM(api_key="invalid", base_url=self.valid_base_url, model_name=self.valid_model)
+        with self.assertRaises(RuntimeError) as context:
+>           model.generate("test")
+
+tests\unit_test\test_openai_llm.py:21:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src\llm\openai_llm.py:22: in generate
+    response = self.client.chat.completions.create(
+venv\Lib\site-packages\openai\_utils\_utils.py:287: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\openai\resources\chat\completions\completions.py:925: in create
+    return self._post(
+venv\Lib\site-packages\openai\_base_client.py:1242: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+
+            if options.follow_redirects is not None:
+                kwargs["follow_redirects"] = options.follow_redirects
+
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("x-request-id"))
+
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****alid is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}     
+
+venv\Lib\site-packages\openai\_base_client.py:1037: AuthenticationError
+__________________________________________________________________________________________ TestOpenAILLM.test_generate_invalid_modelname __________________________________________________________________________________________ 
+
+self = <test_openai_llm.TestOpenAILLM testMethod=test_generate_invalid_modelname>
+
+    def test_generate_invalid_modelname(self):
+        model = OpenAILLM(api_key=self.valid_api_key, base_url=self.valid_base_url, model_name="invalid-model")
+        with self.assertRaises(RuntimeError) as context:
+>           model.generate("test")
+
+tests\unit_test\test_openai_llm.py:27:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src\llm\openai_llm.py:22: in generate
+    response = self.client.chat.completions.create(
+venv\Lib\site-packages\openai\_utils\_utils.py:287: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\openai\resources\chat\completions\completions.py:925: in create
+    return self._post(
+venv\Lib\site-packages\openai\_base_client.py:1242: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+
+            if options.follow_redirects is not None:
+                kwargs["follow_redirects"] = options.follow_redirects
+
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("x-request-id"))
+
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               openai.BadRequestError: Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+
+venv\Lib\site-packages\openai\_base_client.py:1037: BadRequestError
+_____________________________________________________________________________________________ TestOpenAILLM.test_generate_invalid_url _____________________________________________________________________________________________ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -> typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+>           yield
+
+venv\Lib\site-packages\httpx\_transports\default.py:101:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv\Lib\site-packages\httpx\_transports\default.py:250: in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpcore\_sync\connection_pool.py:256: in handle_request
+    raise exc from None
+venv\Lib\site-packages\httpcore\_sync\connection_pool.py:236: in handle_request
+    response = connection.handle_request(
+venv\Lib\site-packages\httpcore\_sync\connection.py:101: in handle_request
+    raise exc
+venv\Lib\site-packages\httpcore\_sync\connection.py:78: in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpcore\_sync\connection.py:124: in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpcore\_backends\sync.py:207: in connect_tcp
+    with map_exceptions(exc_map):
+..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:155: in __exit__
+    self.gen.throw(typ, value, traceback)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+map = {<class 'TimeoutError'>: <class 'httpcore.ConnectTimeout'>, <class 'OSError'>: <class 'httpcore.ConnectError'>}
+
+    @contextlib.contextmanager
+    def map_exceptions(map: ExceptionMapping) -> typing.Iterator[None]:
+        try:
+            yield
+        except Exception as exc:  # noqa: PIE786
+            for from_exc, to_exc in map.items():
+                if isinstance(exc, from_exc):
+>                   raise to_exc(exc) from exc
+E                   httpcore.ConnectError: [Errno 11001] getaddrinfo failed
+
+venv\Lib\site-packages\httpcore\_exceptions.py:14: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+
+            if options.follow_redirects is not None:
+                kwargs["follow_redirects"] = options.follow_redirects
+
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+
+            response = None
+            try:
+>               response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+
+venv\Lib\site-packages\openai\_base_client.py:972:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv\Lib\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+venv\Lib\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+venv\Lib\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\httpx\_transports\default.py:249: in handle_request
+    with map_httpcore_exceptions():
+..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:155: in __exit__
+    self.gen.throw(typ, value, traceback)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    @contextlib.contextmanager
+    def map_httpcore_exceptions() -> typing.Iterator[None]:
+        global HTTPCORE_EXC_MAP
+        if len(HTTPCORE_EXC_MAP) == 0:
+            HTTPCORE_EXC_MAP = _load_httpcore_exceptions()
+        try:
+            yield
+        except Exception as exc:
+            mapped_exc = None
+
+            for from_exc, to_exc in HTTPCORE_EXC_MAP.items():
+                if not isinstance(exc, from_exc):
+                    continue
+                # We want to map to the most specific exception we can find.
+                # Eg if `exc` is an `httpcore.ReadTimeout`, we want to map to
+                # `httpx.ReadTimeout`, not just `httpx.TimeoutException`.
+                if mapped_exc is None or issubclass(to_exc, mapped_exc):
+                    mapped_exc = to_exc
+
+            if mapped_exc is None:  # pragma: no cover
+                raise
+
+            message = str(exc)
+>           raise mapped_exc(message) from exc
+E           httpx.ConnectError: [Errno 11001] getaddrinfo failed
+
+venv\Lib\site-packages\httpx\_transports\default.py:118: ConnectError
+
+The above exception was the direct cause of the following exception:
+
+self = <test_openai_llm.TestOpenAILLM testMethod=test_generate_invalid_url>
+
+    def test_generate_invalid_url(self):
+        model = OpenAILLM(api_key=self.valid_api_key, base_url="https://invalid.url", model_name=self.valid_model)
+        with self.assertRaises(RuntimeError) as context:
+>           model.generate("test")
+
+tests\unit_test\test_openai_llm.py:33:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src\llm\openai_llm.py:22: in generate
+    response = self.client.chat.completions.create(
+venv\Lib\site-packages\openai\_utils\_utils.py:287: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\openai\resources\chat\completions\completions.py:925: in create
+    return self._post(
+venv\Lib\site-packages\openai\_base_client.py:1242: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+
+            if options.follow_redirects is not None:
+                kwargs["follow_redirects"] = options.follow_redirects
+
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising connection error")
+>               raise APIConnectionError(request=request) from err
+E               openai.APIConnectionError: Connection error.
+
+venv\Lib\site-packages\openai\_base_client.py:1004: APIConnectionError
+_____________________________________________________________________________________________ TestOpenAILLM.test_generate_long_prompt _____________________________________________________________________________________________ 
+
+self = <test_openai_llm.TestOpenAILLM testMethod=test_generate_long_prompt>
+
+    def test_generate_long_prompt(self):
+        model = OpenAILLM(api_key=self.valid_api_key, base_url=self.valid_base_url, model_name=self.valid_model)
+        long_prompt = "token " * 130000
+        with self.assertRaises(RuntimeError) as context:
+>           model.generate(long_prompt)
+
+tests\unit_test\test_openai_llm.py:40:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src\llm\openai_llm.py:22: in generate
+    response = self.client.chat.completions.create(
+venv\Lib\site-packages\openai\_utils\_utils.py:287: in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\openai\resources\chat\completions\completions.py:925: in create
+    return self._post(
+venv\Lib\site-packages\openai\_base_client.py:1242: in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def request(
+        self,
+        cast_to: Type[ResponseT],
+        options: FinalRequestOptions,
+        *,
+        stream: bool = False,
+        stream_cls: type[_StreamT] | None = None,
+    ) -> ResponseT | _StreamT:
+        cast_to = self._maybe_override_cast_to(cast_to, options)
+
+        # create a copy of the options we were given so that if the
+        # options are mutated later & we then retry, the retries are
+        # given the original options
+        input_options = model_copy(options)
+        if input_options.idempotency_key is None and input_options.method.lower() != "get":
+            # ensure the idempotency key is reused between requests
+            input_options.idempotency_key = self._idempotency_key()
+
+        response: httpx.Response | None = None
+        max_retries = input_options.get_max_retries(self.max_retries)
+
+        retries_taken = 0
+        for retries_taken in range(max_retries + 1):
+            options = model_copy(input_options)
+            options = self._prepare_options(options)
+
+            remaining_retries = max_retries - retries_taken
+            request = self._build_request(options, retries_taken=retries_taken)
+            self._prepare_request(request)
+
+            kwargs: HttpxSendArgs = {}
+            if self.custom_auth is not None:
+                kwargs["auth"] = self.custom_auth
+
+            if options.follow_redirects is not None:
+                kwargs["follow_redirects"] = options.follow_redirects
+
+            log.debug("Sending HTTP Request: %s %s", request.method, request.url)
+
+            response = None
+            try:
+                response = self._client.send(
+                    request,
+                    stream=stream or self._should_stream_response_body(request=request),
+                    **kwargs,
+                )
+            except httpx.TimeoutException as err:
+                log.debug("Encountered httpx.TimeoutException", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising timeout error")
+                raise APITimeoutError(request=request) from err
+            except Exception as err:
+                log.debug("Encountered Exception", exc_info=True)
+
+                if remaining_retries > 0:
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=None,
+                    )
+                    continue
+
+                log.debug("Raising connection error")
+                raise APIConnectionError(request=request) from err
+
+            log.debug(
+                'HTTP Response: %s %s "%i %s" %s',
+                request.method,
+                request.url,
+                response.status_code,
+                response.reason_phrase,
+                response.headers,
+            )
+            log.debug("request_id: %s", response.headers.get("x-request-id"))
+
+            try:
+                response.raise_for_status()
+            except httpx.HTTPStatusError as err:  # thrown on 4xx and 5xx status code
+                log.debug("Encountered httpx.HTTPStatusError", exc_info=True)
+
+                if remaining_retries > 0 and self._should_retry(err.response):
+                    err.response.close()
+                    self._sleep_for_retry(
+                        retries_taken=retries_taken,
+                        max_retries=max_retries,
+                        options=input_options,
+                        response=response,
+                    )
+                    continue
+
+                # If the response is streamed then we need to explicitly read the response
+                # to completion before attempting to access the response text.
+                if not err.response.is_closed:
+                    err.response.read()
+
+                log.debug("Re-raising status error")
+>               raise self._make_status_error_from_response(err.response) from None
+E               openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 65536 tokens. However, you requested 130004 tokens (130004 in the messages, 0 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+
+venv\Lib\site-packages\openai\_base_client.py:1037: BadRequestError
+____________________________________________________________________________________ TestRetrievalEngine.test_get_similar_contracts_http_error ____________________________________________________________________________________ 
+
+self = <test_retrieval_engine.TestRetrievalEngine testMethod=test_get_similar_contracts_http_error>, mock_post = <MagicMock name='post' id='2521299266640'>
+
+    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    def test_get_similar_contracts_http_error(self, mock_post):
+        mock_post.side_effect = Exception("HTTP error")
+
+>       results = self.engine.get_similar_contracts("contract code")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\unit_test\test_retrieval_engine.py:50:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src\retrieval_module\retrieval_engine.py:36: in get_similar_contracts
+    response = requests.post(self.url, json={"vector": vector}, timeout=10)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1124: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1128: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock name='post' id='2521299266640'>, args = ('http://fake-service/retrieve',), kwargs = {'json': {'vector': [0.1, 0.2, 0.3]}, 'timeout': 10}, effect = Exception('HTTP error')
+
+    def _execute_mock_call(self, /, *args, **kwargs):
+        # separate from _increment_mock_call so that awaited functions are
+        # executed separately from their call, also AsyncMock overrides this method
+
+        effect = self.side_effect
+        if effect is not None:
+            if _is_exception(effect):
+>               raise effect
+E               Exception: HTTP error
+
+..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1183: Exception
+_______________________________________________________________________________________ TestVulnAnalysis.test_get_vuln_analysis_empty_code ________________________________________________________________________________________ 
+
+self = <test_vuln_analysis.TestVulnAnalysis testMethod=test_get_vuln_analysis_empty_code>, mock_file = <MagicMock name='open' id='2521295568720'>, mock_load_string = <MagicMock name='load_string' id='2521360105808'>
+
+    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
+        "vulnerabilities": [{
+            "name": "example_vuln",
+            "description": "descrizione",
+            "attack_scenario": "scenario",
+            "precondition": "condizione"
+        }]
+    }))
+    def test_get_vuln_analysis_empty_code(self, mock_file, mock_load_string):
+        self.mock_llm.generate.return_value = "LLM response"
+
+>       with self.assertRaises(Exception):
+E       AssertionError: Exception not raised
+
+tests\unit_test\test_vuln_analysis.py:54: AssertionError
+===================================================================================================== short test summary info =====================================================================================================
+FAILED tests/integration_test/test_integration_retrieval_engine.py::TestRetrievalEngineIntegration::test_retrieval_empty_code - AssertionError: False is not true
+FAILED tests/integration_test/test_integration_vuln_analysis.py::TestCodeAnalysisIntegration::test_code_analysis_llm_failure - AssertionError: Exception not raised
+FAILED tests/system_test/test_system.py::TestSystemMain::test_empty_contract - AssertionError: 'Codice vuoto' not found in 'Model List: [\'Unchecked Close Remainder To\', \'Unchecked Rekey to\']\n\n\nRetrieved List: []\n\n\n--------------------------------------------------\n\nGiven that the contract ...
+FAILED tests/system_test/test_system.py::TestSystemMain::test_invalid_contract - AssertionError: "Errore durante l'analisi" not found in 'Model List: [\'Arbitrary update\', \'Unchecked Asset Receiver\']\n\n\nRetrieved List: []\n\n\n--------------------------------------------------\n\n### Step 1 – Contr...
+FAILED tests/unit_test/test_HFLLM.py::TestHFLLM::test_generate_long_prompt - AssertionError: 'prompt non valido o troppo lungo' not found in 'index out of range in self'
+FAILED tests/unit_test/test_contract_searcher.py::TestContractSearcher::test_invalid_collection_name - Exception: Collection not found
+FAILED tests/unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_encode_exceeds_max_tokens - AssertionError: Exception not raised
+FAILED tests/unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_encode_valid_input - AssertionError: False is not true
+FAILED tests/unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_invalid_apikey - openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****alid is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}
+FAILED tests/unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_invalid_modelname - openai.BadRequestError: Error code: 400 - {'error': {'message': 'Model Not Exist', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_request_error'}}
+FAILED tests/unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_invalid_url - openai.APIConnectionError: Connection error.
+FAILED tests/unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_long_prompt - openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 65536 tokens. However, you requested 130004 tokens (130004 in the messages, 0 in the completion). Please reduce the len...
+FAILED tests/unit_test/test_retrieval_engine.py::TestRetrievalEngine::test_get_similar_contracts_http_error - Exception: HTTP error
+FAILED tests/unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_empty_code - AssertionError: Exception not raised
+============================================================================================ 14 failed, 58 passed in 501.34s (0:08:21) ============================================================================================ 
