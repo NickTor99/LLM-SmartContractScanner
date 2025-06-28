@@ -1,4 +1,4 @@
-from src.llm.llm_model import LLMModel
+from llm.llm_model import LLMModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch
 import logging

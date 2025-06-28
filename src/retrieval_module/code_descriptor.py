@@ -1,6 +1,6 @@
 import logging
-from src.llm.llm_model import LLMModel
-from src.utils import load_string
+from llm.llm_model import LLMModel
+from utils import load_string
 
 logger = logging.getLogger(__name__)
 

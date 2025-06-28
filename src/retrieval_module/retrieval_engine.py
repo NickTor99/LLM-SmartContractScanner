@@ -3,9 +3,9 @@ from typing import List
 import requests
 from requests import Response
 import logging
-from src.retrieval_module.code_descriptor import CodeDescriptor
-from src.retrieval_module.embedding_model import EmbeddingModel
-from src.utils import map_vulnerability
+from retrieval_module.code_descriptor import CodeDescriptor
+from retrieval_module.embedding_model import EmbeddingModel
+from utils import map_vulnerability
 
 
 logger = logging.getLogger(__name__)

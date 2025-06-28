@@ -1,10 +1,10 @@
-from src.analysis_module.code_analysis import CodeAnalysis
-from src.llm.openai_llm import OpenAILLM
-from src.retrieval_module.code_descriptor import CodeDescriptor
-from src.retrieval_module.embedding_model import EmbeddingModel
-from src.retrieval_module.retrieval_engine import RetrievalEngine
-from src.analysis_module.vuln_analysis import VulnAnalysis
-from src.utils import *
+from analysis_module.code_analysis import CodeAnalysis
+from llm.openai_llm import OpenAILLM
+from retrieval_module.code_descriptor import CodeDescriptor
+from retrieval_module.embedding_model import EmbeddingModel
+from retrieval_module.retrieval_engine import RetrievalEngine
+from analysis_module.vuln_analysis import VulnAnalysis
+from utils import *
 from dotenv import load_dotenv
 import os
 import ast
