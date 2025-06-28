@@ -1,0 +1,4 @@
+requests
+qdrant_client
+fastapi
+uvicorn

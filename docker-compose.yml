@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # 1. Database Qdrant
+  qdrant:
+    image: niktor99/sc-vector-db:1.1
+    container_name: qdrant_db
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - analysis_network
+
+  # 2. API Server (dipende da Qdrant)
+  api_server:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api_server
+    ports:
+      - "8000:8000"
+    environment:
+      - QDRANT_URL=qdrant:6334  # Usa l'hostname interno
+      - API_ENV=production
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    networks:
+      - analysis_network
+
+  # 3. Tool CLI (dipende dall'API)
+  cli_tool:
+    build:
+      context: ./src
+      dockerfile: Dockerfile
+    container_name: contract_analyzer
+    depends_on:
+      api_server:
+        condition: service_healthy
+    networks:
+      - analysis_network
+    environment:
+      - API_URL=http://api_server:8000
+    # Sovrascrivi il comando quando esegui (esempio)
+    command: ["python", "main.py"]
+
+volumes:
+  qdrant_data:
+
+networks:
+  analysis_network:
+    driver: bridge
