@@ -9,7 +9,7 @@ Analyze it and return a structured list of its key behaviors, using **short, gen
 
 - Output must be a list of 3–10 bullet points.
 - Each point should describe one functional behavior or access condition.
-- Focus on core logic, state changes, transaction restrictions, and control flows.
+- Focus on configuration logic, state changes, transaction restrictions, and control flows.
 - Focus on the checks performed on all transaction fields involved (in all group transactions if any). Highlight any missing checks, but only if such checks are required (e.g., close_remainder_to, asset_close_to, rekey_to, transaction_fee, etc.).
 - If all relevant checks for a specific field across all transactions are properly implemented, explicitly state that.
 - Do **not** include variable or function names, implementation details, or code syntax.

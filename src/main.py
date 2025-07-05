@@ -1,83 +1,40 @@
-from analysis_module.code_analysis import CodeAnalysis
-from llm.openai_llm import OpenAILLM
-from retrieval_module.code_descriptor import CodeDescriptor
-from retrieval_module.embedding_model import EmbeddingModel
-from retrieval_module.retrieval_engine import RetrievalEngine
-from analysis_module.vuln_analysis import VulnAnalysis
-from utils import *
-from dotenv import load_dotenv
-import os
-import ast
+import logging
+from cli.invoker import CLIInvoker
 
-def main(path: str = None):
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,  # Può essere DEBUG, WARNING, ERROR, ecc.
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
-    if path is None:
-        # Carica il percorso al file contenente il contratto da analizzare
-        path = get_valid_filepath()
 
-    load_dotenv()  # Carica le variabili da .env
-    api_key = os.getenv("API_KEY")
+def main():
+    print("🛠️ Smart Contract Analyzer (CLI Mode)\nType 'help' for a list of commands. Type 'exit' to quit.\n")
 
-    # Carica il contenuto del contratto come stringa
-    code = load_string(path)
+    invoker = CLIInvoker()
 
-    # Controllo: il codice non deve essere vuoto
-    if not code.strip():
-        print("Errore: il Codice è vuoto.")
-        return
+    while True:
+        try:
+            user_input = input(">>> ").strip()
+            if not user_input:
+                continue
+            if user_input.lower() in ["exit", "quit"]:
+                logger.info("👋 Exiting.")
+                break
 
-    # Controllo: in codice deve essere sintatticamente corretto
-    try:
-        ast.parse(code)
-    except SyntaxError as e:
-        print(f"Errore di sintassi nel codice inserito: {e}")
-        return
+            args = user_input.split()
 
-    # Inizializza un'istanza del modello LLM di OpenAI (in questo caso DeepSeek), passando chiave API e URL personalizzato
-    llm = OpenAILLM(
-        api_key=api_key,
-        model_name="deepseek-chat",
-        base_url="https://api.deepseek.com"
-    )
+            invoker.set_command(args)
+            invoker.run_command()
 
-    # Inizializza il modulo per l'analisi delle vulnerabilità potenziali basata su LLM
-    code_analyzer = CodeAnalysis(llm_model=llm)
-
-    # Inizializza il modulo che genera una descrizione in linguaggio naturale del codice
-    code_descriptor = CodeDescriptor(llm_model=llm)
-
-    # Inizializza il modello di embedding per convertire le descrizioni in vettori (per il retrieval)
-    embedder = EmbeddingModel(device="cpu")
-
-    # Inizializza il motore di retrieval per trovare codici simili tramite descrizioni e vettori
-    retrieval = RetrievalEngine(url="http://localhost:8000/api/search_vulns", descriptor=code_descriptor, embedder=embedder)
-
-    # Inizializza il modulo di analisi approfondita per vulnerabilità specifiche, con supporto RAG
-    vuln_analysis = VulnAnalysis(llm_model=llm)
-
-    # ----------------------
-    # Inizio della pipeline di analisi
-    # ----------------------
-
-    # Fase 1: LLM analizza il codice per estrarre una lista di potenziali vulnerabilità
-    model_list = code_analyzer.get_possible_vulns(code)
-    print(f"Model List: {model_list}\n\n")
-
-    # Fase 2: Recupera da un database vettoriale altri contratti simili per vulnerabilità
-    retrieval_list = retrieval.get_similar_contracts(code)
-    print(f"Retrieved List: {retrieval_list}\n\n")
-
-    # Fase 3: Unione dei risultati ottenuti dalle due fasi precedenti
-    vulns_to_analyze = merge_vuln(model_list, retrieval_list)
-
-    results = ""
-    # Fase 4: Per ogni vulnerabilità da analizzare, esegue un'analisi approfondita con contesto
-    for vuln in vulns_to_analyze:
-        vuln = map_vulnerability(vuln)  # Mappa eventuali alias o sinonimi della vulnerabilità
-        results = f"{results}{'-'*50}\n\n{vuln_analysis.get_vuln_analysis(vuln, code)}"
-
-    print(results)
-    print("Analisi completata!")
+        except SystemExit:
+            # Intercetta le eccezioni da argparse (argomenti errati)
+            print('\n')
+        except KeyboardInterrupt:
+            logger.info("\n👋 Exiting.")
+            break
+        except Exception as e:
+            logger.error(f"❌ Error: {e}\n")
 
 
 if __name__ == "__main__":

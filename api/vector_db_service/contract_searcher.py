@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class ContractSearcher:
-    def __init__(self, collection_name: str, url_db: str = "http://localhost:6333"):
+    def __init__(self, collection_name: str, url_db: str = "http://qdrant_db:6333"):
         self.collection_name = collection_name
 
         # initialize Qdrant client

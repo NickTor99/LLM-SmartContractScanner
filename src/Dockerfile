@@ -1,13 +1,11 @@
-# Fase builder
-FROM python:3.11 as builder
-COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+# Base cli tool image with all dependencies
+FROM niktor99/cli-base-image:latest as final
 
-# Fase finale
-FROM python:3.11-slim
-ENV PATH="/root/.local/bin:${PATH}"
-COPY --from=builder /root/.local /root/.local
-WORKDIR /src
-COPY . .
+WORKDIR /app
 
-CMD ["python", "main.py"]
+# Copia SOLO il codice (le dipendenze sono già nell'immagine base)
+COPY . ./src/
+
+# Entrypoint specifico
+CMD ["python", "src/main.py"]
+

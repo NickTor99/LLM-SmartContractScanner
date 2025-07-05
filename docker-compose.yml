@@ -1,58 +1,49 @@
 version: '3.8'
 
 services:
-  # 1. Database Qdrant
   qdrant:
-    image: niktor99/sc-vector-db:1.1
+    image: niktor99/sc-vector-db:1.1  # Immagine preesistente
     container_name: qdrant_db
     ports:
       - "6333:6333"
       - "6334:6334"
     volumes:
-      - qdrant_data:/qdrant/storage
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
+      - qdrant_data:/qdrant/storage  # Dati persistenti
     networks:
       - analysis_network
 
-  # 2. API Server (dipende da Qdrant)
   api_server:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
+    image: niktor99/api-server:latest  # Sostituisci con la tua immagine su Docker Hub
     container_name: api_server
     ports:
       - "8000:8000"
     environment:
-      - QDRANT_URL=qdrant:6334  # Usa l'hostname interno
+      - QDRANT_URL=qdrant:6334
       - API_ENV=production
     depends_on:
-      qdrant:
-        condition: service_healthy
+      - qdrant
     networks:
       - analysis_network
 
-  # 3. Tool CLI (dipende dall'API)
   cli_tool:
-    build:
-      context: ./src
-      dockerfile: Dockerfile
-    container_name: contract_analyzer
+    image: niktor99/cli-tool:latest  # Immagine pre-buildata
+    container_name: cli_tool
     depends_on:
-      api_server:
-        condition: service_healthy
+      - api_server
     networks:
       - analysis_network
     environment:
       - API_URL=http://api_server:8000
-    # Sovrascrivi il comando quando esegui (esempio)
-    command: ["python", "main.py"]
+    volumes:
+      - ./contracts:/data # Monta la cartella esterna con il codice da analizzare
+    working_dir: /app/src
+    stdin_open: true
+    tty: true
+    entrypoint: ["python", "main.py"]
 
 volumes:
   qdrant_data:
+  model_cache:
 
 networks:
   analysis_network:

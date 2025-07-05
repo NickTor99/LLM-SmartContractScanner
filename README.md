@@ -15,7 +15,7 @@ To run this project, make sure you have the following installed:
 Install the dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt.txt
 ```
 
 ## 3. ⚙️Setup Instructions

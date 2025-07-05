@@ -15,7 +15,7 @@ class HFLLM(LLMModel):
         try:
             # Carica tokenizer e modello
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self.model = AutoModelForCausalLM.from_pretrained(model_name)
+            self.model = AutoModelForCausalLM.from_pretrained(model_name, load_in_4bit=True)
         except Exception as e:
             logger.error(f"Errore durante il caricamento del modello LLM tramite HuggingFace: {e}")
             raise RuntimeError(f"Errore nel caricamento del modello: {model_name}") from e
@@ -45,5 +45,4 @@ class HFLLM(LLMModel):
             else:
                 logger.error(f"Errore durante la generazione del testo: {e}")
             raise
-
 
