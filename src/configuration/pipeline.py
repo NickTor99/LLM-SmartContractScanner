@@ -26,7 +26,6 @@ def get_contract_paths(path: str, extensions=None) -> list[Path]:
             raise ValueError(f"Estensione non supportata: {path_obj.suffix}")
 
     elif path_obj.is_dir():
-        # Raccoglie tutti i file validi nella directory (ricorsivamente se vuoi)
         files = [f for f in path_obj.glob("*") if f.is_file() and f.suffix in extensions]
         if not files:
             raise ValueError("Nessun file valido trovato nella cartella.")

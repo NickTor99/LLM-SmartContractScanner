@@ -1,8 +1,13 @@
+import sys
 import unittest
 import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
+print(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from io import StringIO
 from unittest.mock import patch
-from src.main import main  # Assicurati che main accetti un filepath come argomento
+from cli_shell import cli_shell
+
+
 
 
 def get_abs_path(file):
@@ -14,32 +19,32 @@ class TestSystemMain(unittest.TestCase):
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_valid_contract(self, mock_stdout):
-        main(get_abs_path("valid.teal"))
+        cli_shell(get_abs_path("valid.teal"))
         output = mock_stdout.getvalue()
         self.assertIn("Analisi completata", output)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_empty_contract(self, mock_stdout):
-        main(get_abs_path("empty.teal"))
+        cli_shell(get_abs_path("empty.teal"))
         output = mock_stdout.getvalue()
         self.assertIn("Codice è vuoto", output)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_invalid_contract(self, mock_stdout):
-        main(get_abs_path("invalid.teal"))
+        cli_shell(get_abs_path("invalid.teal"))
         output = mock_stdout.getvalue()
         self.assertIn("Errore di sintassi", output)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_file_not_found(self, mock_stdout):
         with self.assertRaises(FileNotFoundError):
-            main(get_abs_path("notfound.teal"))
+            cli_shell(get_abs_path("notfound.teal"))
 
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_directory_instead_of_file(self, mock_stdout):
         with self.assertRaises(FileNotFoundError):
-            main(get_abs_path(""))
+            cli_shell(get_abs_path(""))
 
 
 

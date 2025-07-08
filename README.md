@@ -51,5 +51,5 @@ python vector_db_service/service_db.py
 
 ### Step 2: Run the Application
 ```bash
-python main.py
+python cli_shell.py
 ```

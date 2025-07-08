@@ -1,6 +1,7 @@
 import json
 import os
 
+
 class ConfigManager:
     CONFIG_PATH = "configuration/config.json"
 

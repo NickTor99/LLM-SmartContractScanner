@@ -46,7 +46,7 @@ class SetModelCommand(Command):
 
         config_manager = ConfigManager()
         config_manager.add_model_config(config)
-        logger.info(f"✅ Modello impostato: {self.model_name}")
+        print(f"✅ Modello impostato: {self.model_name}")
 
 
 class ModelListCommand(Command):

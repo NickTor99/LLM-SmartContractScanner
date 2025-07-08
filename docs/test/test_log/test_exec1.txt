@@ -74,7 +74,7 @@ self = <test_system.TestSystemMain testMethod=test_empty_contract>, mock_stdout 
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_empty_contract(self, mock_stdout):
-        main(get_abs_path("empty.teal"))
+        cli_shell(get_abs_path("empty.teal"))
         output = mock_stdout.getvalue()
 >       self.assertIn("Codice vuoto", output)  # sostituisci con il messaggio effettivo
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -121,7 +121,7 @@ self = <test_system.TestSystemMain testMethod=test_invalid_contract>, mock_stdou
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_invalid_contract(self, mock_stdout):
-        main(get_abs_path("invalid.teal"))
+        cli_shell(get_abs_path("invalid.teal"))
         output = mock_stdout.getvalue()
 >       self.assertIn("Errore durante l'analisi", output)  # sostituisci con il messaggio atteso
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
