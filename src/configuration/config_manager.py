@@ -3,7 +3,7 @@ import os
 
 
 class ConfigManager:
-    CONFIG_PATH = "configuration/config.json"
+    CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "config.json"))
 
     def __init__(self):
         if not os.path.exists(self.CONFIG_PATH):
@@ -11,7 +11,6 @@ class ConfigManager:
 
     def _create_default_config(self):
         default_config = {
-            "server_api_url": "http://localhost:8000/api/search_vulns",
             "embedding_model_name": "hkunlp/instructor-xl",
             "embedding_device": "cpu",
             "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",

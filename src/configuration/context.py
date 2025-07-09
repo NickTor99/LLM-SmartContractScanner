@@ -1,4 +1,5 @@
 import logging
+import os
 
 from configuration.config_manager import ConfigManager
 from configuration.llm_factory import LLMFactory
@@ -42,7 +43,7 @@ class AppContext:
         )
 
         self.retrieval_engine = RetrievalEngine(
-            url=self.config.get("server_api_url"),
+            url=f"{os.getenv('API_URL', 'http://localhost:8000')}{self.config.get('server_api_url')}",
             descriptor=code_descriptor,
             embedder=embedder,
             num_retrieve=self.config.get("contract_limit")

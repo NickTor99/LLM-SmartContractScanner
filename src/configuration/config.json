@@ -1,18 +1,42 @@
 {
-  "server_api_url": "http://api_server:8000/api/search_vulns",
-  "embedding_model_name": "hkunlp/instructor-xl",
-  "embedding_device": "cpu",
-  "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
-  "llm": [
-    {
-      "source": "openai",
-      "model_name": "deepseek-chat",
-      "base_url": "https://api.deepseek.com",
-      "api_key": "sk-36dc60b2590248549d81a309aaf3f912"
-    },
-    {
-      "source": "huggingface",
-      "model_name": "meta-llama/Meta-Llama-3-8B"
-    }
-  ]
+    "server_api_url": "/api/search_vulns",
+    "embedding_model_name": "hkunlp/instructor-xl",
+    "embedding_device": "cpu",
+    "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
+    "llm": [
+        {
+            "source": "openai",
+            "model_name": "deepseek-chat",
+            "base_url": "https://api.deepseek.com",
+            "api_key": "sk-36dc60b2590248549d81a309aaf3f912"
+        },
+        {
+            "source": "huggingface",
+            "model_name": "meta-llama/Meta-Llama-3-8B"
+        },
+        {
+            "source": "huggingface",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": null,
+            "api_key": null
+        },
+        {
+            "source": "huggingface",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": "cdscscd",
+            "api_key": null
+        },
+        {
+            "source": "openai",
+            "model_name": "gpt-4",
+            "base_url": null,
+            "api_key": "dvdvdfv"
+        },
+        {
+            "source": "openai",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": null,
+            "api_key": "sk-dcdscds2cds2v2ds2"
+        }
+    ]
 }

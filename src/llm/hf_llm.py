@@ -1,6 +1,6 @@
 from llm.llm_model import LLMModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
-import torch
+import torch.cuda
 import logging
 
 logger = logging.getLogger(__name__)
@@ -10,12 +10,12 @@ class HFLLM(LLMModel):
     def __init__(self, model_name: str, device: str = None):
         # Se non specificato, usa GPU se disponibile
         if device is None:
-            device = 0 if torch.cuda.is_available() else -1
+            device = "cpu" if torch.cuda.is_available() else "cuda"
 
         try:
             # Carica tokenizer e modello
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-            self.model = AutoModelForCausalLM.from_pretrained(model_name, load_in_4bit=True)
+            self.model = AutoModelForCausalLM.from_pretrained(model_name)
         except Exception as e:
             logger.error(f"Errore durante il caricamento del modello LLM tramite HuggingFace: {e}")
             raise RuntimeError(f"Errore nel caricamento del modello: {model_name}") from e

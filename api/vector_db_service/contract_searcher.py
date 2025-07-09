@@ -1,3 +1,5 @@
+import os
+
 from qdrant_client import QdrantClient
 import logging
 
@@ -6,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class ContractSearcher:
-    def __init__(self, collection_name: str, url_db: str = "http://qdrant_db:6333"):
+    def __init__(self, collection_name: str, url_db: str = os.getenv("QDRANT_URL", "http://qdrant_db:6333")):
         self.collection_name = collection_name
 
         # initialize Qdrant client

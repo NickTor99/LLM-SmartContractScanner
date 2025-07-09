@@ -21,6 +21,7 @@ class RunCommand(Command):
 
     def execute(self):
         context = AppContext(model=self.model, vuln_limit=self.vuln_limit, contract_limit=self.contract_limit)
+        print(self.path)
         run_pipeline(context=context, path=self.path)
 
 

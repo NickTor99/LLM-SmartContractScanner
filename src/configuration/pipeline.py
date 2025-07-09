@@ -73,5 +73,5 @@ def run_pipeline(context: AppContext, path: str):
             vuln = map_vulnerability(vuln)  # Mappa eventuali alias o sinonimi della vulnerabilità
             results = f"{results}{'-'*50}\n\n{context.get_vuln_analyzer().get_vuln_analysis(vuln, code)}"
 
-        logger.info(results)
-        logger.info("Analisi completata!")
+        print(results)
+        print("Analisi completata!")

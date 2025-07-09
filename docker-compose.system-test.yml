@@ -18,7 +18,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - QDRANT_URL=qdrant:6334
+      - QDRANT_URL=http://qdrant_db:6333
       - API_ENV=production
     depends_on:
       - qdrant

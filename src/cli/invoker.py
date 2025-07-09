@@ -65,7 +65,7 @@ class CLIInvoker:
             "--source",
             type=str,
             required=True,
-            choices=["OpenAI", "HuggingFace", "LocalAI"],  # Suggested restriction
+            choices=["openai", "huggingface"],  # Suggested restriction
             help="Backend provider for the model"
         )
         setmodel_parser.add_argument(
