@@ -20,6 +20,45 @@ class TestCLIInvoker(unittest.TestCase):
         cli.set_command(args)
         self.assertIsInstance(cli.command, RunCommand)
 
+    def test_set_command_run_missing(self):
+        args = [
+            "run",
+            "--model", "gpt-4",
+            "--vuln-limit", "2",
+            "--contract-limit", "3"
+        ]
+        cli = CLIInvoker()
+        with self.assertRaises(SystemExit):
+            cli.set_command(args)
+
+        args = [
+            "run",
+            "--filepath", "contract.teal",
+            "--model", "gpt-4",
+            "--contract-limit", "3"
+        ]
+        cli.set_command(args)
+        self.assertIsInstance(cli.command, RunCommand)
+
+        args = [
+            "run",
+            "--filepath", "contract.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "2"
+        ]
+        cli.set_command(args)
+        self.assertIsInstance(cli.command, RunCommand)
+
+        args = [
+            "run",
+            "--filepath", "contract.teal",
+            "--vuln-limit", "2",
+            "--contract-limit", "3"
+        ]
+        cli = CLIInvoker()
+        with self.assertRaises(SystemExit):
+            cli.set_command(args)
+
     def test_set_command_set_model(self):
         """
         Verifica che il comando 'set-model' venga associato a SetModelCommand.
@@ -31,6 +70,36 @@ class TestCLIInvoker(unittest.TestCase):
             "--api_key", "sk-test"
         ]
         cli = CLIInvoker()
+        cli.set_command(args)
+        self.assertIsInstance(cli.command, SetModelCommand)
+
+    def test_set_command_set_model_missing(self):
+        """
+        Verifica che il comando 'set-model' venga associato a SetModelCommand.
+        """
+        args = [
+            "set-model",
+            "--source", "openai",
+            "--api_key", "sk-test"
+        ]
+        cli = CLIInvoker()
+        with self.assertRaises(SystemExit):
+            cli.set_command(args)
+
+        args = [
+            "set-model",
+            "--model_name", "gpt-4",
+            "--api_key", "sk-test"
+        ]
+        cli = CLIInvoker()
+        with self.assertRaises(SystemExit):
+            cli.set_command(args)
+
+        args = [
+            "set-model",
+            "--model_name", "gpt-4",
+            "--source", "openai"
+        ]
         cli.set_command(args)
         self.assertIsInstance(cli.command, SetModelCommand)
 

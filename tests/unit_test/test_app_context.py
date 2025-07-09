@@ -53,3 +53,41 @@ class TestAppContext(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             AppContext(model="unknown", vuln_limit=1, contract_limit=2)
+
+
+    @patch("configuration.context.ConfigManager")
+    def test_model_negative_vuln_limit(self, mock_config):
+        """
+        Verifica che venga sollevata un'eccezione se Vuln limit è negativo.
+        """
+        mock_config_instance = MagicMock()
+        mock_config_instance.load_config.side_effect = ValueError("Modello non trovato")
+        mock_config.return_value = mock_config_instance
+
+        with self.assertRaises(ValueError):
+            AppContext(model="gpt-4", vuln_limit=-1, contract_limit=2)
+
+
+    @patch("configuration.context.ConfigManager")
+    def test_model_negative_contract_limit(self, mock_config):
+        """
+        Verifica che venga sollevata un'eccezione se Contract limit è negativo.
+        """
+        mock_config_instance = MagicMock()
+        mock_config_instance.load_config.side_effect = ValueError("Modello non trovato")
+        mock_config.return_value = mock_config_instance
+
+        with self.assertRaises(ValueError):
+            AppContext(model="gpt-4", vuln_limit=1, contract_limit=-2)
+
+    @patch("configuration.context.ConfigManager")
+    def test_model_negative_zero_vulnerability(self, mock_config):
+        """
+        Verifica che venga sollevata un'eccezione se ci sono zero vulnerabilità.
+        """
+        mock_config_instance = MagicMock()
+        mock_config_instance.load_config.side_effect = ValueError("Modello non trovato")
+        mock_config.return_value = mock_config_instance
+
+        with self.assertRaises(ValueError):
+            AppContext(model="gpt-4", vuln_limit=0, contract_limit=0)
