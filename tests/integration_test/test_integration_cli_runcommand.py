@@ -73,6 +73,28 @@ class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             cli.run_command()
 
+    @patch("cli.comands.run_pipeline")
+    @patch("cli.comands.AppContext")
+    def test_run_file_model_not_installed(self, mock_appcontext, mock_pipeline):
+        """
+        Test T3-T4: File inesistente, modello non istallato
+        Simula l'errore di file non trovato durante l'esecuzione della pipeline.
+        """
+        mock_pipeline.side_effect = FileNotFoundError("File not found")
+
+
+        args = [
+            "run",
+            "--filepath", "nonexistent.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "1",
+            "--contract-limit", "2"
+        ]
+        cli = CLIInvoker()
+        cli.set_command(args)
+
+        with self.assertRaises(FileNotFoundError):
+            cli.run_command()
 
 if __name__ == "__main__":
     unittest.main()

@@ -16,6 +16,7 @@ class TestConfigManager(unittest.TestCase):
         config = manager.load_config("gpt-4")
         self.assertEqual(config["llm"]["model_name"], "gpt-4")
 
+
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "llm": []
     }))
@@ -23,6 +24,7 @@ class TestConfigManager(unittest.TestCase):
         manager = ConfigManager()
         with self.assertRaises(ValueError):
             manager.load_config("nonexistent")
+
 
     @patch("builtins.open", new_callable=mock_open)
     def test_save_config(self, mock_file):
@@ -36,6 +38,7 @@ class TestConfigManager(unittest.TestCase):
         handle = mock_file()
         handle.write.assert_called()
 
+
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "llm": [{"model_name": "existing", "source": "openai"}]
     }))
@@ -48,6 +51,7 @@ class TestConfigManager(unittest.TestCase):
         manager.add_model_config(new_model)
 
         self.assertTrue(handle.write.called)
+
 
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "llm": [{"model_name": "gpt-4", "source": "openai"}]
