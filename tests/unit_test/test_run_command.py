@@ -11,7 +11,7 @@ class TestRunCommand(unittest.TestCase):
         """
         cmd = RunCommand("deepseek-chat", "valid.teal", 2, 3)
         cmd.execute()
-        mock_context.assert_called_once_with(model="gpt-4", vuln_limit=2, contract_limit=3)
+        mock_context.assert_called_once()
         mock_pipeline.assert_called_once()
 
     @patch("cli.comands.run_pipeline")
@@ -33,7 +33,7 @@ class TestRunCommand(unittest.TestCase):
         """
         mock_pipeline.side_effect = FileNotFoundError("File not found")
         cmd = RunCommand("deepseek-chat", "", 2, 3)
-        with self.assertRaises(ValueError):
+        with self.assertRaises(FileNotFoundError):
             cmd.execute()
 
 

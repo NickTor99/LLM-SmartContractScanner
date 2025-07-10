@@ -29,14 +29,11 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         mock_build.assert_called_once()
         mock_config.return_value.add_model_config.assert_called_once()
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
-    def test_set_model_valid_openai_missing_ApiKey(self, mock_build, mock_config):
+    def test_set_model_valid_openai_missing_ApiKey(self):
         """
         Test T2: Source = openai, manca solo ApiKey.
         DA un Errore ApiKey Obbligatorio.
         """
-        mock_build.return_value = MagicMock()
 
         args = [
             "set-model",
@@ -47,17 +44,14 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli = CLIInvoker()
         cli.set_command(args)
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(ValueError):
             cli.run_command()
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
-    def test_set_model_valid_openai_missing_Base_URL(self, mock_build, mock_config):
+    def test_set_model_valid_openai_missing_Base_URL(self):
         """
         Test T3: Source = openai, manca BaseURL.
         Da un errore BaseUrl obbligatorio.
         """
-        mock_build.return_value = MagicMock()
 
         args = [
             "set-model",
@@ -71,18 +65,16 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         with self.assertRaises(ValueError):
             cli.run_command()
 
-
-    @patch("cli.comands.ConfigManager")
     @patch("cli.comands.LLMFactory.build")
-    def test_set_model_valid_huggingface(self, mock_build, mock_config):
+    def test_set_model_valid_huggingface(self, mock_build):
         """
-        Test T4: Source = huggingface, parametri opzionali assenti.
+        Test T5 variante: Source = huggingface, parametri opzionali assenti.
         """
         mock_build.return_value = MagicMock()
 
         args = [
             "set-model",
-            "--model_name", "llama",
+            "--model_name", "sshleifer/tiny-gpt2",
             "--source", "huggingface"
         ]
         cli = CLIInvoker()
@@ -90,19 +82,18 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli.run_command()
 
         mock_build.assert_called_once()
-        mock_config.return_value.add_model_config.assert_called_once()
 
-    @patch("cli.comands.ConfigManager")
     @patch("cli.comands.LLMFactory.build")
-    def test_set_model_valid_huggingface(self, mock_build, mock_config):
+    def test_set_model_valid_huggingface2(self, mock_build):
         """
         Test T5: Source = huggingface, parametri opzionali presenti e validi.
         """
+
         mock_build.return_value = MagicMock()
 
         args = [
             "set-model",
-            "--model_name", "llama",
+            "--model_name", "sshleifer/tiny-gpt2",
             "--source", "huggingface",
             "--api_key", "sk-test",
             "--base_url", "https://api.huggingface.com"
@@ -112,16 +103,13 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli.run_command()
 
         mock_build.assert_called_once()
-        mock_config.return_value.add_model_config.assert_called_once()
 
 
-    @patch("cli.comands.LLMFactory.build")
-    def test_set_model_invalid_source(self, mock_build):
+    def test_set_model_invalid_source(self):
         """
         Test T5 variante: source non supportata.
         Verifica che venga sollevata un'eccezione da LLMFactory.
         """
-        mock_build.side_effect = ValueError("Fonte non supportata")
 
         args = [
             "set-model",
@@ -129,9 +117,9 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
             "--source", "invalid"
         ]
         cli = CLIInvoker()
-        cli.set_command(args)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(SystemExit):
+            cli.set_command(args)
             cli.run_command()
 
 

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 from qdrant_client.http.exceptions import UnexpectedResponse
 
-from src.vector_db_service.contract_searcher import ContractSearcher  # Adatta il path se necessario
+from api.vector_db_service.contract_searcher import ContractSearcher  # Adatta il path se necessario
 
 class TestContractSearcher(unittest.TestCase):
 

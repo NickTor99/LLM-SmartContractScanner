@@ -41,6 +41,7 @@ class CLIInvoker:
         run_parser.add_argument(
             "--model",
             type=str,
+            required=True,
             help="Nome del modello LLM da utilizzare")
         run_parser.add_argument(
             "--vuln-limit",

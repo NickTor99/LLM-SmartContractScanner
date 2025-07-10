@@ -15,6 +15,8 @@ def main(args=None):
         args = sys.argv[1:]
     invoker = CLIInvoker()
 
+    print(args)
+
     try:
         invoker.set_command(args)
         invoker.run_command()

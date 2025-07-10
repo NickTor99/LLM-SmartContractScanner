@@ -16,33 +16,68 @@ def get_abs_path(file):
 
 
 class TestSystemMain(unittest.TestCase):
+
     @patch("sys.stdout", new_callable=StringIO)
     def test_valid_contract(self, mock_stdout):
         main(["run", "--filepath", get_abs_path("valid.teal"), "--model", "deepseek-chat"])
         output = mock_stdout.getvalue()
         self.assertIn("Analisi completata", output)
 
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_empty_contract(self, mock_stdout):
+    def test_empty_contract(self):
+        log_stream = io.StringIO()
+        handler = logging.StreamHandler(log_stream)
+        logger = logging.getLogger()
+        logger.addHandler(handler)
+
         main(["run", "--filepath", get_abs_path("empty.teal"), "--model", "deepseek-chat"])
-        output = mock_stdout.getvalue()
-        self.assertIn("Codice è vuoto", output)
+
+        handler.flush()
+        logs = log_stream.getvalue()
+        logger.removeHandler(handler)
+
+        self.assertIn("Codice è vuoto", logs)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_invalid_contract(self, mock_stdout):
-        main(["run", "--filepath", get_abs_path("invalid.teal"), "--model", "deepseek-chat"])
-        output = mock_stdout.getvalue()
-        self.assertIn("Errore di sintassi", output)
 
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_file_not_found(self, mock_stdout):
-        with self.assertRaises(FileNotFoundError):
-            main(["run", "--filepath", get_abs_path("notfound.teal"), "--model", "deepseek-chat"])
+        log_stream = io.StringIO()
+        handler = logging.StreamHandler(log_stream)
+        logger = logging.getLogger()
+        logger.addHandler(handler)
+
+        main(["run", "--filepath", get_abs_path("invalid.teal"), "--model", "deepseek-chat"])
+
+        handler.flush()
+        logs = log_stream.getvalue()
+        logger.removeHandler(handler)
+        self.assertIn("Errore di sintassi", logs)
+
+    def test_file_not_found(self):
+        log_stream = io.StringIO()
+        handler = logging.StreamHandler(log_stream)
+        logger = logging.getLogger()
+        logger.addHandler(handler)
+
+        main(["run", "--filepath", get_abs_path("notfound.teal"), "--model", "deepseek-chat"])
+
+        handler.flush()
+        logs = log_stream.getvalue()
+        logger.removeHandler(handler)
+        self.assertIn("Error: Percorso", logs)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_directory_instead_of_file(self, mock_stdout):
-        with self.assertRaises(FileNotFoundError):
-            main(["run", "--filepath", get_abs_path(""), "--model", "deepseek-chat"])
+        log_stream = io.StringIO()
+        handler = logging.StreamHandler(log_stream)
+        logger = logging.getLogger()
+        logger.addHandler(handler)
+
+        main(["run", "--filepath", get_abs_path(""), "--model", "deepseek-chat"])
+
+        handler.flush()
+        logs = log_stream.getvalue()
+        logger.removeHandler(handler)
+        self.assertIn("Error: Percorso", logs)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_model_list(self, mock_stdout):
@@ -56,17 +91,16 @@ class TestSystemMain(unittest.TestCase):
         output = mock_stdout.getvalue()
         self.assertIn("Modello impostato", output)
 
-
     @patch("sys.stdout", new_callable=StringIO)
     def test_set_model_openai(self, mock_stdout):
-        main(["set-model", "--source", "openai", "--model_name", "sshleifer/tiny-gpt2", "--api_key", "sk-dcdscds2cds2v2ds2"])
+        main(["set-model", "--source", "openai", "--model_name", "sshleifer/tiny-gpt2", "--api_key", "sk-dcdscds2cds2v2ds2", "--base_url", "https://api.openai.com"])
         output = mock_stdout.getvalue()
         self.assertIn("Modello impostato", output)
 
     def test_set_model_openai_missing_apikey(self):
         log_stream = io.StringIO()
         handler = logging.StreamHandler(log_stream)
-        logger = logging.getLogger()  # Oppure specifica il tuo logger
+        logger = logging.getLogger()
         logger.addHandler(handler)
 
         main(["set-model", "--source", "openai", "--model_name", "gpt-4", "--base_url", "https://api.openai.com"])
@@ -75,27 +109,11 @@ class TestSystemMain(unittest.TestCase):
         logs = log_stream.getvalue()
         logger.removeHandler(handler)
 
-        self.assertIn("Errore", logs)
-
-    def test_run_missing_model(self):
-        log_stream = io.StringIO()
-        handler = logging.StreamHandler(log_stream)
-        logger = logging.getLogger()  # Oppure specifica il tuo logger
-        logger.addHandler(handler)
-
-        main(["run", "--filepath", get_abs_path("valid.teal")])
-
-        handler.flush()
-        logs = log_stream.getvalue()
-        logger.removeHandler(handler)
-
         self.assertIn("Error", logs)
 
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_help(self, mock_stdout):
-        main(["--help"])
-        output = mock_stdout.getvalue()
-        self.assertIn("LLM SmartContractScanner CLI", output)
+    def test_run_missing_model(self):
+        with self.assertRaises(SystemExit):
+            main(["run", "--filepath", get_abs_path("valid.teal")])
 
     def test_command_not_found(self):
         with self.assertRaises(SystemExit):

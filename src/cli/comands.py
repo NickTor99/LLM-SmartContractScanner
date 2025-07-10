@@ -15,6 +15,15 @@ class RunCommand(Command):
     def __init__(self, model, path, vuln_limit, contract_limit):
         self.model = model
         self.path = path
+
+        if vuln_limit < 0:
+            raise ValueError("vuln_limit non può essere negativo")
+        if contract_limit < 0:
+            raise ValueError("contract_limit non può essere negativo")
+        if vuln_limit == 0 and contract_limit == 0:
+            raise ValueError("❌ Almeno uno tra 'vuln-limit' e 'contract-limit' deve essere maggiore di zero.")
+
+
         self.vuln_limit = vuln_limit
         self.contract_limit = contract_limit
 
@@ -31,6 +40,15 @@ class SetModelCommand(Command):
         self.base_url = base_url
         self.api_key = api_key
         self.source = source
+
+        if source == "openai":
+            if api_key is None:
+                raise ValueError("Per i modelli disponibili tramite libreria openai è necessario specificare una API Key")
+
+            if base_url is None:
+                raise ValueError("Per i modelli disponibili tramite libreria openai è necessario specificare un Base URL")
+
+
         self.model_name = model_name
 
     def execute(self):
@@ -43,7 +61,7 @@ class SetModelCommand(Command):
         try:
             llm = LLMFactory.build(config)
         except Exception as e:
-            return
+            raise
 
         config_manager = ConfigManager()
         config_manager.add_model_config(config)
