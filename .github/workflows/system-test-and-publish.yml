@@ -31,11 +31,11 @@ jobs:
       - name: Build CLI Tool Docker image from src/
         if: success()
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/cli-tool:latest ./src
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/cli-tool:latest ./src
 
       - name: Push image to Docker Hub
         if: success()
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/cli-tool:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/cli-tool:latest
 
 
