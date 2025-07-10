@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and start services
-        run: docker-compose -f docker-compose.system-test.yml up --build
+        run: docker compose -f docker-compose.system-test.yml up --build
 
       - name: Wait for services to be ready
         run: sleep 10
@@ -32,7 +32,7 @@ jobs:
 
       - name: Stop and remove containers
         if: always()
-        run: docker-compose down
+        run: docker compose down
 
       - name: Build CLI Tool Docker image from src/
         if: success()
