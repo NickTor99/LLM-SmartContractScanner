@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from llm.llm_model import LLMModel  # Assicurati di adattare l'import corretto
+from llm.llm_model import LLMModel
 from utils import load_string
 
 logger = logging.getLogger(__name__)

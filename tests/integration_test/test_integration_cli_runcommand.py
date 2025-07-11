@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from cli.invoker import CLIInvoker
-from cli.comands import RunCommand
+from src.cli.invoker import CLIInvoker
 
 
 class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):

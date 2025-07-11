@@ -1,6 +1,5 @@
 import unittest
 from src.llm.hf_llm import HFLLM  # importa qui la tua classe se ha un nome modulo diverso
-import torch
 
 class TestHFLLM(unittest.TestCase):
 

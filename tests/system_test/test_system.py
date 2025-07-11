@@ -4,7 +4,6 @@ import sys
 import unittest
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
-print(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
 from io import StringIO
 from unittest.mock import patch
 from main import main

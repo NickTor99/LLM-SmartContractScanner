@@ -1,13 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from cli.invoker import CLIInvoker
-from cli.comands import SetModelCommand
 
 
 class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
+    @patch("src.cli.comands.ConfigManager")
+    @patch("src.cli.comands.LLMFactory.build")
     def test_set_model_valid_openai(self, mock_build, mock_config):
         """
         Test T1: Source = openai, tutti i parametri presenti.
@@ -65,7 +64,7 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         with self.assertRaises(ValueError):
             cli.run_command()
 
-    @patch("cli.comands.LLMFactory.build")
+    @patch("src.cli.comands.LLMFactory.build")
     def test_set_model_valid_huggingface(self, mock_build):
         """
         Test T5 variante: Source = huggingface, parametri opzionali assenti.
@@ -83,7 +82,7 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
 
         mock_build.assert_called_once()
 
-    @patch("cli.comands.LLMFactory.build")
+    @patch("src.cli.comands.LLMFactory.build")
     def test_set_model_valid_huggingface2(self, mock_build):
         """
         Test T5: Source = huggingface, parametri opzionali presenti e validi.
