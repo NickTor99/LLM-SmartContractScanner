@@ -4,6 +4,7 @@ from configuration.llm_factory import LLMFactory
 from configuration.pipeline import run_pipeline
 from configuration.config_manager import ConfigManager
 
+
 class Command(ABC):
     @abstractmethod
     def execute(self):
@@ -12,9 +13,10 @@ class Command(ABC):
 
 # ----- RunCommand -----
 class RunCommand(Command):
-    def __init__(self, model, path, vuln_limit, contract_limit):
+    def __init__(self, model, path, vuln_limit, contract_limit, out):
         self.model = model
         self.path = path
+        self.out = out
 
         if vuln_limit < 0:
             raise ValueError("vuln_limit non può essere negativo")
@@ -30,8 +32,8 @@ class RunCommand(Command):
 
     def execute(self):
         context = AppContext(model=self.model, vuln_limit=self.vuln_limit, contract_limit=self.contract_limit)
-        print(self.path)
-        run_pipeline(context=context, path=self.path)
+        results = run_pipeline(context=context, path=self.path)
+        context.get_report_generator().generate(results=results, file_path=self.path, report_name=self.out)
 
 
 # ----- SetModelCommand -----

@@ -36,6 +36,7 @@ services:
       - API_URL=http://api_server:8000
     volumes:
       - ./contracts:/data # Monta la cartella esterna con il codice da analizzare
+      - ./output_report:/app/output_report # Monta la cartella esterna con i report delle analisi
     working_dir: /app/src
     stdin_open: true
     tty: true

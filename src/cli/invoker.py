@@ -18,7 +18,7 @@ class CLIInvoker:
         parsed_args = parser.parse_args(args)
 
         if parsed_args.command == "run":
-            self.command = RunCommand(model=parsed_args.model, path=parsed_args.filepath, vuln_limit=parsed_args.vuln_limit, contract_limit=parsed_args.contract_limit)
+            self.command = RunCommand(model=parsed_args.model, path=parsed_args.filepath, vuln_limit=parsed_args.vuln_limit, contract_limit=parsed_args.contract_limit, out=parsed_args.out)
 
         if parsed_args.command == "set-model":
             self.command = SetModelCommand(model_name=parsed_args.model_name, source=parsed_args.source, api_key=parsed_args.api_key, base_url=parsed_args.base_url)
@@ -53,6 +53,12 @@ class CLIInvoker:
             type=int,
             default=2,
             help="Numero di contratti simili da recuperare")
+        run_parser.add_argument(
+            "--out",
+            type=str,
+            help="Nome del file di report generato dall'analisi.",
+            default=None
+        )
 
         # Comando: set-model
         setmodel_parser = subparsers.add_parser("set-model", help="Configure a new model for the system")

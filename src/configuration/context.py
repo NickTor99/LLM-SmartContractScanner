@@ -8,6 +8,7 @@ from retrieval_module.code_descriptor import CodeDescriptor
 from retrieval_module.embedding_model import EmbeddingModel
 from retrieval_module.retrieval_engine import RetrievalEngine
 from analysis_module.vuln_analysis import VulnAnalysis
+from report.html_report_generator import HTMLReportGenerator
 
 logger = logging.getLogger(__name__)
 class AppContext:
@@ -20,6 +21,7 @@ class AppContext:
         self.code_analyzer = None
         self.vuln_analyzer = None
         self.retrieval_engine = None
+        self.report_generator = None
         self._initialize()
 
     def _initialize(self):
@@ -55,6 +57,8 @@ class AppContext:
 
         logger.info(f"Vuln Analyzer impostato correttamente!")
 
+        self.report_generator = HTMLReportGenerator(out_dir=self.config.get('report_dir'))
+
     def get_code_analyzer(self) -> CodeAnalysis:
         return self.code_analyzer
 
@@ -64,4 +68,6 @@ class AppContext:
     def get_retrieval_engine(self) -> RetrievalEngine:
         return self.retrieval_engine
 
+    def get_report_generator(self) -> HTMLReportGenerator:
+        return self.report_generator
 

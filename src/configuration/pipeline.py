@@ -68,11 +68,19 @@ def run_pipeline(context: AppContext, path: str):
 
     logger.info(f"\n{50*'-'}Inizio analisi dettagliata delle vulnerabilità{50*'-'}\n")
 
-    results = ""
+    results = []
+
+
     # Fase 4: Per ogni vulnerabilità da analizzare, esegue un'analisi approfondita con contesto
     for vuln in vulns_to_analyze:
+        data = {}
         vuln = map_vulnerability(vuln)  # Mappa eventuali alias o sinonimi della vulnerabilità
-        results = f"{results}{'-'*50}\n\n{context.get_vuln_analyzer().get_vuln_analysis(vuln, code)}"
 
-    print(results)
+        data["vulnerability"] = vuln
+        data["analysis"] = context.get_vuln_analyzer().get_vuln_analysis(vuln, code)
+        results.append(data)
+
     print("Analisi completata!")
+
+    return results
+

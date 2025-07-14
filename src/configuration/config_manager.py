@@ -15,6 +15,7 @@ class ConfigManager:
             "embedding_model_name": "hkunlp/instructor-xl",
             "embedding_device": "cpu",
             "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
+            "report_dir": "../../output_report",
             "llm": []
         }
         self.save_config(default_config)

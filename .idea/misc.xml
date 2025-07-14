@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
     <option name="sdkName" value="Python 3.11 (LLM-SmartContractScanner)" />
   </component>
   <component name="ProjectRootManager">
-    <output url="file://$PROJECT_DIR$/out" />
+    <output url="file://$PROJECT_DIR$/output_report" />
   </component>
 </project>

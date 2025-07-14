@@ -22,3 +22,8 @@ You are an expert in Algorand smart contract (ASC) security analysis. Your task 
     * **Vulnerable:** If the vulnerability is clearly present and exploitable within the contract's logic.
     * **Not Vulnerable:** If the vulnerability is not applicable to the contract type or its logic, or if the code effectively prevents its exploitation.
     * **Potentially Vulnerable:** If there are ambiguities in the code or potential scenarios that could lead to the vulnerability, but further context or analysis might be required for a definitive conclusion. Clearly explain the reasons for this classification.
+
+If the contract **is vulnerable**
+### Step 4 – Remediation:
+    * **Write the vulnerable code snippet.
+    * **Write the secure code snippet
