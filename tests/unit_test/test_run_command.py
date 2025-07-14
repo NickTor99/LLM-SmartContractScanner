@@ -11,7 +11,7 @@ class TestRunCommand(unittest.TestCase):
         """
         cmd = RunCommand("deepseek-chat", "valid.teal", 2, 3)
         cmd.execute()
-        mock_context.assert_called_once()
+        mock_context.assert_called_once_with(model="gpt-4", vuln_limit=2, contract_limit=3)
         mock_pipeline.assert_called_once()
 
     @patch("cli.comands.run_pipeline")
@@ -33,7 +33,7 @@ class TestRunCommand(unittest.TestCase):
         """
         mock_pipeline.side_effect = FileNotFoundError("File not found")
         cmd = RunCommand("deepseek-chat", "", 2, 3)
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(ValueError):
             cmd.execute()
 
 
@@ -61,3 +61,28 @@ class TestRunCommand(unittest.TestCase):
         cmd = RunCommand("deepseek-chat", "valid.teal", 0, 0)
         with self.assertRaises(ValueError):
             cmd.execute()
+
+    # Change Request 2: Report output
+
+    @patch("cli.comands.run_pipeline")
+    @patch("cli.comands.AppContext")
+    def test_execute_with_out_path(self, mock_context, mock_pipeline):
+        """
+        RC7: out specificato => il report deve essere generato nella directory fornita.
+        """
+        cmd = RunCommand("gpt-4", "valid.teal", 2, 3, out="output/report.html")
+        cmd.execute()
+        mock_context.assert_called_once_with(model="gpt-4", vuln_limit=2, contract_limit=3, out_path="output/report.html")
+        mock_pipeline.assert_called_once()
+
+
+    @patch("cli.comands.run_pipeline")
+    @patch("cli.comands.AppContext")
+    def test_execute_without_out_path(self, mock_context, mock_pipeline):
+        """
+        RC8: out non specificato => il report deve essere generato nel percorso predefinito.
+        """
+        cmd = RunCommand("gpt-4", "valid.teal", 2, 3, out=None)
+        cmd.execute()
+        mock_context.assert_called_once_with(model="gpt-4", vuln_limit=2, contract_limit=3, out_path=None)
+        mock_pipeline.assert_called_once()

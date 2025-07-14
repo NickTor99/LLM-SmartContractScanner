@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from src.cli.invoker import CLIInvoker
+from cli.invoker import CLIInvoker
+from cli.comands import RunCommand
 
 
 class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
@@ -94,6 +95,63 @@ class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
 
         with self.assertRaises(FileNotFoundError):
             cli.run_command()
+
+
+    #Change Reiquest 2
+
+
+    @patch("cli.comands.run_pipeline")
+    @patch("cli.comands.AppContext")
+    def test_run_with_out_param(self, mock_appcontext, mock_pipeline):
+        """
+        T5: Esecuzione con parametro --out esplicitamente definito.
+        """
+        args = [
+            "run",
+            "--filepath", "contracts/test.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "2",
+            "--contract-limit", "2",
+            "--out", "output/custom-report.html"
+        ]
+
+        cli = CLIInvoker()
+        cli.set_command(args)
+        cli.run_command()
+
+        mock_appcontext.assert_called_once_with(
+            model="gpt-4",
+            vuln_limit=2,
+            contract_limit=2,
+            out_path="output/custom-report.html"
+        )
+        mock_pipeline.assert_called_once()
+
+    @patch("cli.comands.run_pipeline")
+    @patch("cli.comands.AppContext")
+    def test_run_without_out_param(self, mock_appcontext, mock_pipeline):
+        """
+        T6: Esecuzione senza parametro --out.
+        """
+        args = [
+            "run",
+            "--filepath", "contracts/test.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "2",
+            "--contract-limit", "2"
+        ]
+
+        cli = CLIInvoker()
+        cli.set_command(args)
+        cli.run_command()
+
+        mock_appcontext.assert_called_once_with(
+            model="gpt-4",
+            vuln_limit=2,
+            contract_limit=2,
+            out_path=None
+        )
+        mock_pipeline.assert_called_once()
 
 if __name__ == "__main__":
     unittest.main()

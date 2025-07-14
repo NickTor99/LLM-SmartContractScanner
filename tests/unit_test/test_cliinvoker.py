@@ -129,5 +129,24 @@ class TestCLIInvoker(unittest.TestCase):
             cli.set_command(["run", "--model", "gpt-4"])
 
 
+
+    # Change Request 2: Report output
+
+    def test_run_missing_out_param(self):
+        """
+        C13: run senza --out => errore di inizializzazione (parametro richiesto)
+        """
+        cli = CLIInvoker()
+        args = [
+            "run",
+            "--filepath", "contract.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "1",
+            "--contract-limit", "2"
+        ]
+        with self.assertRaises(SystemExit):
+            cli.set_command(args)
+
+
 if __name__ == "__main__":
     unittest.main()
