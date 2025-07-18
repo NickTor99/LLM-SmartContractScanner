@@ -102,10 +102,17 @@ class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
 
     @patch("cli.comands.run_pipeline")
     @patch("cli.comands.AppContext")
-    def test_run_with_out_param(self, mock_appcontext, mock_pipeline):
+    def test_run_with_out_param(self, mock_app_context, mock_pipeline):
         """
         T5: Esecuzione con parametro --out esplicitamente definito.
         """
+
+        mock_generator = MagicMock()
+        mock_context_instance = MagicMock()
+        mock_context_instance.get_report_generator.return_value = mock_generator
+
+        mock_app_context.return_value = mock_context_instance
+
         args = [
             "run",
             "--filepath", "contracts/test.teal",
@@ -115,43 +122,49 @@ class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
             "--out", "output/custom-report.html"
         ]
 
+        mock_pipeline.return_value = [{"vulnerability": "Arbitrary delete", "analysis": ""}]
+
         cli = CLIInvoker()
         cli.set_command(args)
         cli.run_command()
 
-        mock_appcontext.assert_called_once_with(
-            model="gpt-4",
-            vuln_limit=2,
-            contract_limit=2,
-            out_path="output/custom-report.html"
+        mock_generator.generate.assert_called_once_with(
+            results=mock_pipeline.return_value,
+            file_path="contracts/test.teal",
+            report_name="output/custom-report.html"
         )
-        mock_pipeline.assert_called_once()
 
     @patch("cli.comands.run_pipeline")
     @patch("cli.comands.AppContext")
-    def test_run_without_out_param(self, mock_appcontext, mock_pipeline):
+    def test_run_without_out_param(self, mock_app_context, mock_pipeline):
         """
         T6: Esecuzione senza parametro --out.
         """
+        mock_generator = MagicMock()
+        mock_context_instance = MagicMock()
+        mock_context_instance.get_report_generator.return_value = mock_generator
+
+        mock_app_context.return_value = mock_context_instance
+
         args = [
             "run",
             "--filepath", "contracts/test.teal",
             "--model", "gpt-4",
             "--vuln-limit", "2",
-            "--contract-limit", "2"
+            "--contract-limit", "2",
         ]
+
+        mock_pipeline.return_value = [{"vulnerability": "Arbitrary delete", "analysis": ""}]
 
         cli = CLIInvoker()
         cli.set_command(args)
         cli.run_command()
 
-        mock_appcontext.assert_called_once_with(
-            model="gpt-4",
-            vuln_limit=2,
-            contract_limit=2,
-            out_path=None
+        mock_generator.generate.assert_called_once_with(
+            results=mock_pipeline.return_value,
+            file_path="contracts/test.teal",
+            report_name=None
         )
-        mock_pipeline.assert_called_once()
 
 if __name__ == "__main__":
     unittest.main()

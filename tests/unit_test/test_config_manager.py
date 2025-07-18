@@ -64,5 +64,26 @@ class TestConfigManager(unittest.TestCase):
         self.assertEqual(models[0]["model_name"], "gpt-4")
 
 
+    @patch.object(ConfigManager, 'save_config')
+    def test_create_default_config(self, mock_save_config):
+        # Arrange
+        manager = ConfigManager()
+
+        # Act
+        manager._create_default_config()
+
+        # Assert
+        expected_config = {
+            "server_api_url": "/api/search_vulns",
+            "embedding_model_name": "hkunlp/instructor-xl",
+            "embedding_device": "cpu",
+            "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
+            "report_dir": "../../output_report",
+            "llm": []
+        }
+
+        mock_save_config.assert_called_once_with(expected_config)
+
+
 if __name__ == "__main__":
     unittest.main()

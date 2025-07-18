@@ -1,0 +1,270 @@
+C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\venv\Scripts\python.exe C:/Users/Smart/AppData/Roaming/JetBrains/IntelliJIdea2023.2/plugins/python/helpers/pycharm/_jb_pytest_runner.py --path C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests
+Testing started at 19:07 ...
+Launching pytest with arguments C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests --no-header --no-summary -q in C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests
+
+============================= test session starts =============================
+collecting ... collected 144 items
+
+integration_test/test_integration_cli_model_list.py::TestIntegrationCLIInvokerModelListCommand::test_model_list_empty
+integration_test/test_integration_cli_model_list.py::TestIntegrationCLIInvokerModelListCommand::test_model_list_with_models
+integration_test/test_integration_cli_runcommand.py::TestIntegrationCLIInvokerRunCommand::test_run_file_model_not_installed PASSED [  0%]PASSED [  1%]
+integration_test/test_integration_cli_runcommand.py::TestIntegrationCLIInvokerRunCommand::test_run_file_not_found
+integration_test/test_integration_cli_runcommand.py::TestIntegrationCLIInvokerRunCommand::test_run_model_not_installed
+integration_test/test_integration_cli_runcommand.py::TestIntegrationCLIInvokerRunCommand::test_run_valid_model_and_file
+integration_test/test_integration_cli_runcommand.py::TestIntegrationCLIInvokerRunCommand::test_run_with_out_param
+integration_test/test_integration_cli_runcommand.py::TestIntegrationCLIInvokerRunCommand::test_run_without_out_param
+integration_test/test_integration_cli_set_model.py::TestIntegrationCLIInvokerSetModelCommand::test_set_model_invalid_source PASSED [  2%]PASSED [  2%]PASSED [  3%]PASSED [  4%]PASSED [  4%]PASSED [  5%]
+integration_test/test_integration_cli_set_model.py::TestIntegrationCLIInvokerSetModelCommand::test_set_model_valid_huggingface
+integration_test/test_integration_cli_set_model.py::TestIntegrationCLIInvokerSetModelCommand::test_set_model_valid_huggingface2
+integration_test/test_integration_cli_set_model.py::TestIntegrationCLIInvokerSetModelCommand::test_set_model_valid_openai
+integration_test/test_integration_cli_set_model.py::TestIntegrationCLIInvokerSetModelCommand::test_set_model_valid_openai_missing_ApiKey
+integration_test/test_integration_cli_set_model.py::TestIntegrationCLIInvokerSetModelCommand::test_set_model_valid_openai_missing_Base_URL
+integration_test/test_integration_code_analysis.py::TestCodeAnalysisIntegration::test_code_analysis_llm_failure PASSED [  6%]usage: _jb_pytest_runner.py set-model [-h] --model_name MODEL_NAME --source
+                                      {openai,huggingface}
+                                      [--base_url BASE_URL]
+                                      [--api_key API_KEY]
+_jb_pytest_runner.py set-model: error: argument --source: invalid choice: 'invalid' (choose from 'openai', 'huggingface')
+PASSED [  6%]✅ Modello impostato: sshleifer/tiny-gpt2
+PASSED [  7%]✅ Modello impostato: sshleifer/tiny-gpt2
+PASSED [  8%]✅ Modello impostato: gpt-4
+PASSED [  9%]PASSED [  9%]
+integration_test/test_integration_code_analysis.py::TestCodeAnalysisIntegration::test_code_analysis_success
+integration_test/test_integration_retrieval_engine.py::TestRetrievalEngineIntegration::test_descriptor_failure PASSED [ 10%]PASSED [ 11%]
+integration_test/test_integration_retrieval_engine.py::TestRetrievalEngineIntegration::test_embedder_failure
+integration_test/test_integration_retrieval_engine.py::TestRetrievalEngineIntegration::test_retrieval_empty_code
+integration_test/test_integration_retrieval_engine.py::TestRetrievalEngineIntegration::test_retrieval_simple_contract
+integration_test/test_integration_retrieval_engine.py::TestRetrievalEngineIntegration::test_searcher_failure
+integration_test/test_integration_vuln_analysis.py::TestCodeAnalysisIntegration::test_code_analysis_llm_failure PASSED [ 11%]PASSED [ 12%]PASSED [ 13%]PASSED [ 13%]PASSED [ 14%]
+integration_test/test_integration_vuln_analysis.py::TestCodeAnalysisIntegration::test_code_analysis_success
+system_test/test_system.py::TestSystemMain::test_command_not_found PASSED [ 15%]PASSED [ 15%]
+system_test/test_system.py::TestSystemMain::test_directory_instead_of_file
+system_test/test_system.py::TestSystemMain::test_empty_contract
+system_test/test_system.py::TestSystemMain::test_file_not_found
+system_test/test_system.py::TestSystemMain::test_invalid_contract
+system_test/test_system.py::TestSystemMain::test_model_list
+system_test/test_system.py::TestSystemMain::test_out_not_valid
+system_test/test_system.py::TestSystemMain::test_run_missing_model
+system_test/test_system.py::TestSystemMain::test_run_without_out
+system_test/test_system.py::TestSystemMain::test_set_model_hf
+system_test/test_system.py::TestSystemMain::test_set_model_openai
+system_test/test_system.py::TestSystemMain::test_set_model_openai_missing_apikey
+system_test/test_system.py::TestSystemMain::test_valid_contract
+unit_test/test_HFLLM.py::TestHFLLM::test_generate_empty_prompt PASSED [ 16%]['not-found']
+usage: _jb_pytest_runner.py [-h] {run,set-model,model-list} ...
+_jb_pytest_runner.py: error: argument command: invalid choice: 'not-found' (choose from 'run', 'set-model', 'model-list')
+PASSED [ 17%]PASSED   [ 18%]['run', '--filepath', 'C:\\Users\\Smart\\IdeaProjects\\LLM-SmartContractScanner\\tests\\system_test\\test_contracts\\empty.teal', '--model', 'deepseek-chat']
+PASSED   [ 18%]['run', '--filepath', 'C:\\Users\\Smart\\IdeaProjects\\LLM-SmartContractScanner\\tests\\system_test\\test_contracts\\notfound.teal', '--model', 'deepseek-chat']
+PASSED [ 19%]PASSED       [ 20%]FAILED    [ 20%]['run', '--filepath', 'C:\\Users\\Smart\\IdeaProjects\\LLM-SmartContractScanner\\tests\\system_test\\test_contracts\\valid.teal', '--model', 'deepseek-chat', '--out', '<report>']
+Analisi completata!
+
+system_test\test_system.py:84 (TestSystemMain.test_out_not_valid)
+self = <test_system.TestSystemMain testMethod=test_out_not_valid>
+
+    def test_out_not_valid(self):
+>       with self.assertRaises(SystemExit):
+E       AssertionError: SystemExit not raised
+
+system_test\test_system.py:86: AssertionError
+PASSED [ 21%]['run', '--filepath', 'C:\\Users\\Smart\\IdeaProjects\\LLM-SmartContractScanner\\tests\\system_test\\test_contracts\\valid.teal']
+usage: _jb_pytest_runner.py run [-h] --filepath FILEPATH --model MODEL
+                                [--vuln-limit VULN_LIMIT]
+                                [--contract-limit CONTRACT_LIMIT] [--out OUT]
+_jb_pytest_runner.py run: error: the following arguments are required: --model
+PASSED  [ 22%]['run', '--filepath', 'C:\\Users\\Smart\\IdeaProjects\\LLM-SmartContractScanner\\tests\\system_test\\test_contracts\\valid.teal', '--model', 'deepseek-chat']
+Analisi completata!
+PASSED     [ 22%]Device set to use cpu
+PASSED [ 23%]PASSED [ 24%]['set-model', '--source', 'openai', '--model_name', 'gpt-4', '--base_url', 'https://api.openai.com']
+PASSED   [ 25%]['run', '--filepath', 'C:\\Users\\Smart\\IdeaProjects\\LLM-SmartContractScanner\\tests\\system_test\\test_contracts\\valid.teal', '--model', 'deepseek-chat', '--out', 'valid_contract_report']
+Analisi completata!
+PASSED    [ 25%]Device set to use cpu
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+
+unit_test/test_HFLLM.py::TestHFLLM::test_generate_long_prompt PASSED     [ 26%]Device set to use cpu
+Token indices sequence length is longer than the specified maximum sequence length for this model (4001 > 1024). Running this sequence through the model will result in indexing errors
+Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.
+
+unit_test/test_HFLLM.py::TestHFLLM::test_generate_valid_prompt PASSED    [ 27%]Device set to use cpu
+Setting `pad_token_id` to `eos_token_id`:50256 for open-end generation.
+
+unit_test/test_HFLLM.py::TestHFLLM::test_init_invalid_model PASSED       [ 27%]
+unit_test/test_HFLLM.py::TestHFLLM::test_init_success PASSED             [ 28%]Device set to use cpu
+
+unit_test/test_LLMFactory.py::TestLLMFactory::test_build_huggingface_model
+unit_test/test_LLMFactory.py::TestLLMFactory::test_build_invalid_source
+unit_test/test_LLMFactory.py::TestLLMFactory::test_build_openai_model
+unit_test/test_LLMFactory.py::TestLLMFactory::test_build_openai_model_missing_apikey
+unit_test/test_LLMFactory.py::TestLLMFactory::test_build_openai_model_missing_baseurl
+unit_test/test_app_context.py::TestAppContext::test_appcontext_initialization_success PASSED [ 29%]Device set to use cpu
+PASSED [ 29%]PASSED [ 30%]PASSED [ 31%]PASSED [ 31%]
+unit_test/test_app_context.py::TestAppContext::test_model_negative_contract_limit
+unit_test/test_app_context.py::TestAppContext::test_model_negative_vuln_limit
+unit_test/test_app_context.py::TestAppContext::test_model_negative_zero_vulnerability
+unit_test/test_app_context.py::TestAppContext::test_model_not_found_in_config
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_run_invalid_out_param PASSED [ 32%]PASSED [ 33%]PASSED [ 34%]PASSED [ 34%]PASSED [ 35%]
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_run_missing_out_param
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_invalid
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_missing_arguments
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_model_list
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_run
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_run_missing
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_set_model
+unit_test/test_cliinvoker.py::TestCLIInvoker::test_set_command_set_model_missing
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_get_possible_vulns_generation_error FAILED [ 36%]
+unit_test\test_cliinvoker.py:150 (TestCLIInvoker.test_run_invalid_out_param)
+self = <test_cliinvoker.TestCLIInvoker testMethod=test_run_invalid_out_param>
+
+    def test_run_invalid_out_param(self):
+        """
+        C14: run con valore di --out non valido => Errore: il valore di --out non deve contenere caratteri speciali
+        """
+        cli = CLIInvoker()
+        args = [
+            "run",
+            "--filepath", "contract.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "1",
+            "--contract-limit", "2",
+            "--out", "<report>"
+        ]
+
+>       with self.assertRaises(SystemExit):
+E       AssertionError: SystemExit not raised
+
+unit_test\test_cliinvoker.py:165: AssertionError
+PASSED [ 36%]PASSED [ 37%]usage: _jb_pytest_runner.py [-h] {run,set-model,model-list} ...
+_jb_pytest_runner.py: error: argument command: invalid choice: 'invalid-command' (choose from 'run', 'set-model', 'model-list')
+PASSED [ 38%]usage: _jb_pytest_runner.py run [-h] --filepath FILEPATH --model MODEL
+                                [--vuln-limit VULN_LIMIT]
+                                [--contract-limit CONTRACT_LIMIT] [--out OUT]
+_jb_pytest_runner.py run: error: the following arguments are required: --filepath
+PASSED [ 38%]PASSED [ 39%]PASSED [ 40%]usage: _jb_pytest_runner.py run [-h] --filepath FILEPATH --model MODEL
+                                [--vuln-limit VULN_LIMIT]
+                                [--contract-limit CONTRACT_LIMIT] [--out OUT]
+_jb_pytest_runner.py run: error: the following arguments are required: --filepath
+usage: _jb_pytest_runner.py run [-h] --filepath FILEPATH --model MODEL
+                                [--vuln-limit VULN_LIMIT]
+                                [--contract-limit CONTRACT_LIMIT] [--out OUT]
+_jb_pytest_runner.py run: error: the following arguments are required: --model
+PASSED [ 40%]PASSED [ 41%]usage: _jb_pytest_runner.py set-model [-h] --model_name MODEL_NAME --source
+                                      {openai,huggingface}
+                                      [--base_url BASE_URL]
+                                      [--api_key API_KEY]
+_jb_pytest_runner.py set-model: error: the following arguments are required: --model_name
+usage: _jb_pytest_runner.py set-model [-h] --model_name MODEL_NAME --source
+                                      {openai,huggingface}
+                                      [--base_url BASE_URL]
+                                      [--api_key API_KEY]
+_jb_pytest_runner.py set-model: error: the following arguments are required: --source
+
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_get_possible_vulns_parse_error
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_get_possible_vulns_success
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_init_failure
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_init_successful
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_parse_response_json_error
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_parse_response_missing_section
+unit_test/test_code_analysis.py::TestCodeAnalysis::test_parse_response_success
+unit_test/test_code_descriptor.py::TestCodeDescriptor::test_get_description_failure PASSED [ 42%]PASSED [ 43%]PASSED [ 43%]PASSED [ 44%]PASSED [ 45%]PASSED [ 45%]PASSED [ 46%]PASSED [ 47%]
+unit_test/test_code_descriptor.py::TestCodeDescriptor::test_get_description_successful
+unit_test/test_code_descriptor.py::TestCodeDescriptor::test_init_failure
+unit_test/test_code_descriptor.py::TestCodeDescriptor::test_init_successful
+unit_test/test_config_manager.py::TestConfigManager::test_add_model_config PASSED [ 47%]PASSED [ 48%]PASSED [ 49%]PASSED [ 50%]
+unit_test/test_config_manager.py::TestConfigManager::test_create_default_config
+unit_test/test_config_manager.py::TestConfigManager::test_get_all_models
+unit_test/test_config_manager.py::TestConfigManager::test_load_config_model_absent
+unit_test/test_config_manager.py::TestConfigManager::test_load_config_model_present
+unit_test/test_config_manager.py::TestConfigManager::test_save_config
+unit_test/test_contract_searcher.py::TestContractSearcher::test_invalid_collection_name PASSED [ 50%]PASSED [ 51%]PASSED [ 52%]PASSED [ 52%]PASSED [ 53%]PASSED [ 54%]
+unit_test/test_contract_searcher.py::TestContractSearcher::test_invalid_url_db
+unit_test/test_contract_searcher.py::TestContractSearcher::test_search_vulns_empty_result
+unit_test/test_contract_searcher.py::TestContractSearcher::test_search_vulns_missing_fields
+unit_test/test_contract_searcher.py::TestContractSearcher::test_search_vulns_successful
+unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_encode_empty_input PASSED [ 54%]PASSED [ 55%]PASSED [ 56%]PASSED [ 56%]PASSED [ 57%]
+unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_encode_exceeds_max_tokens
+unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_encode_failure
+unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_encode_valid_input
+unit_test/test_embedding_model.py::TestEmbeddingModelRealModel::test_init_failure
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_empty_list PASSED [ 58%]PASSED [ 59%]Token indices sequence length is longer than the specified maximum sequence length for this model (10017 > 512). Running this sequence through the model will result in indexing errors
+PASSED [ 59%]PASSED [ 60%][0.02514006197452545, 0.011716339737176895, 0.0375339575111866, -0.04075898975133896, -0.06265521049499512, -0.07950706779956818, -0.051222383975982666, 0.03397301957011223, -0.05572342872619629, -0.076908640563488, 0.05620906129479408, 0.04570379480719566, -0.04071321710944176, -0.09322608262300491, -0.027383092790842056, -0.012099598534405231, 0.035794686526060104, -0.033021438866853714, -0.016766833141446114, 0.011311437003314495, -0.009157945401966572, 0.03121669963002205, -0.03681864216923714, 0.04676484316587448, -0.01001629326492548, -0.0794190987944603, 0.02821977622807026, 0.012786509469151497, 0.003302087541669607, 0.04310649260878563, 0.07656984031200409, -0.01098200585693121, 0.008899969048798084, -0.05206669121980667, 0.027103807777166367, 0.008521844632923603, 0.01719258911907673, -0.008082520216703415, 0.022505614906549454, -0.022093402221798897, -0.025796739384531975, 0.011944524012506008, 0.05363434553146362, -0.02083781361579895, 0.047954510897397995, 0.05893830582499504, 0.005417175590991974, 0.004762167576700449, 0.04326528683304787, -0.007121790200471878, -0.02723359689116478, -0.02862030267715454, 0.012051611207425594, -0.04069877043366432, 0.001996005419641733, -0.008296669460833073, -0.06176469102501869, 0.010936101898550987, -0.056856006383895874, 0.04876970872282982, 0.005670973099768162, 0.004161156713962555, 0.010652015917003155, 0.007709182798862457, 0.04468044266104698, 0.02568208798766136, 0.02818864956498146, 0.012989111244678497, 0.022971615195274353, 0.023075222969055176, -0.0447075255215168, 0.011764148250222206, 0.024604853242635727, -0.01486742403358221, -0.02770022675395012, 0.07224641740322113, 0.04415498301386833, 0.07857473194599152, 0.026537027209997177, -0.01014980673789978, -0.07615076750516891, 0.0008063132991082966, -0.04289403557777405, -0.010026836767792702, -0.022716175764799118, 0.024932797998189926, -0.026443196460604668, -0.010811722837388515, 0.03401912748813629, 0.0561804324388504, -0.016737131401896477, -0.015611075796186924, -0.02521592192351818, -0.021534878760576248, -0.003516114316880703, -0.004230500664561987, 0.022548936307430267, -0.003359975293278694, -0.022036781534552574, 0.015928223729133606, 0.004380681086331606, 0.026497922837734222, -0.016167016699910164, -0.09336709976196289, -0.012204533442854881, -0.011109336279332638, 0.006837442982941866, 0.04030507430434227, 0.0030375602655112743, 0.019011512398719788, 0.044574033468961716, 0.05991796776652336, 0.0370618961751461, 0.0027989097870886326, 0.05829176679253578, -0.09502117335796356, 0.06874862313270569, 0.002402952406555414, -0.016423119232058525, 0.010111126117408276, 0.02297159656882286, -0.014847197569906712, 0.01255397591739893, 0.05402703583240509, 0.02223948948085308, 0.03308751806616783, 0.024742500856518745, -0.004329756833612919, 0.025529736652970314, -0.038561660796403885, 0.009601994417607784, -0.0492386631667614, -0.007713163271546364, -0.031049877405166626, 0.08764733374118805, -0.02817414700984955, 0.0033707870170474052, 0.051103200763463974, 0.03955274447798729, -0.031952958554029465, 0.008059892803430557, -0.03678697347640991, 0.01482409704476595, -0.0660044401884079, -0.0005945310113020241, 0.02888798527419567, -0.004353189375251532, 0.02097180299460888, 0.02786339819431305, 0.01977582834661007, -0.025735503062605858, -0.013301555067300797, 0.03759867325425148, -0.001308285165578127, -0.05931834504008293, 0.007447582203894854, 0.02863328531384468, 0.010072663426399231, -0.021994885057210922, -0.017414811998605728, 0.050912242382764816, 0.026203373447060585, -0.04692990332841873, 0.052393026649951935, -0.05535053834319115, 0.053484175354242325, -0.028324663639068604, -0.022427594289183617, 0.011190311051905155, 0.030488833785057068, -0.014267578721046448, 0.006822068709880114, -0.02291043847799301, -0.04207482933998108, 0.07043274492025375, -0.01717875525355339, -0.005459987558424473, 0.053770992904901505, 0.033078406006097794, 0.061541102826595306, 0.028525682166218758, 0.022783339023590088, 0.03408728539943695, 0.0591694638133049, -0.03155399486422539, 0.03321625664830208, -0.0004908589762635529, -0.03688773885369301, 0.02837681584060192, 0.016627753153443336, 0.058039285242557526, -0.07106602936983109, 0.041903745383024216, 0.04413551464676857, 0.023656882345676422, -0.012794295325875282, -0.0020340888295322657, 0.04027407616376877, -0.0019880097825080156, 0.03194539248943329, 0.019032252952456474, -0.0031351884827017784, 0.01282705832272768, 0.006029320880770683, -0.007769497111439705, 0.02721015363931656, 0.02104867435991764, 0.06634929031133652, 0.022890999913215637, -0.004053493961691856, -0.010856128297746181, 0.02632223442196846, 0.012876980006694794, 0.010393688455224037, -0.0035682052839547396, 0.06512343138456345, -0.025079404935240746, -0.05853283777832985, 0.007343940436840057, 0.05663822591304779, -0.003264017403125763, 0.06476327776908875, 0.01362806186079979, -0.029198355972766876, 0.06007668748497963, -0.015968304127454758, -0.06078275665640831, 0.012207135558128357, 0.04990055412054062, -0.021911224350333214, 0.037648122757673264, -0.020115947350859642, 0.06729904562234879, 0.025316271930933, -0.012794293463230133, -0.032083190977573395, -0.01605755090713501, -0.061681393533945084, -0.0005535362870432436, 0.005461853463202715, 0.004000910557806492, -0.03223176300525665, -0.01716172881424427, -0.02653297409415245, 0.0351700522005558, 0.004761622287333012, 0.0011598849669098854, 0.027551524341106415, -0.0389028862118721, 0.0046360488049685955, -0.016428643837571144, -0.02947748824954033, -0.0026323655620217323, 0.03334160894155502, -0.03520284965634346, 0.004365939646959305, 0.0004343627952039242, -0.03082738257944584, -0.028245575726032257, 0.03134937584400177, -0.006571704056113958, -0.038861650973558426, -0.05224427953362465, -0.01821877621114254, -0.013097304850816727, -0.035150595009326935, -0.01853717677295208, -0.029888106510043144, 0.067001573741436, -0.02352987229824066, -0.0877026841044426, 0.08233693242073059, 0.046843353658914566, -0.003963126335293055, -0.0031623970717191696, 0.02954087220132351, -0.02330094203352928, -0.04891099035739899, -0.03855657950043678, 0.07003837823867798, -0.025284575298428535, -0.03699757531285286, -0.0127363046631217, 0.012081548571586609, 0.015841398388147354, 0.051340483129024506, 0.008522074669599533, -0.033363401889801025, 0.043829504400491714, -0.027274779975414276, -0.0042750053107738495, 0.05376563221216202, -0.03896697238087654, 0.02577059157192707, -0.03644058108329773, -0.005735612008720636, 0.019045231863856316, 0.0030681523494422436, 0.03620241582393646, -0.019155602902173996, -0.048785075545310974, 0.013151243329048157, -0.00837998278439045, -0.036696672439575195, -0.0286813136190176, 0.014293479733169079, -0.022878112271428108, 0.03422294557094574, -0.04494471475481987, 0.02284899912774563, 0.08084873110055923, 0.06873439252376556, 0.029870079830288887, 0.029803328216075897, -0.02646895870566368, -0.0037728145252913237, 0.05987866222858429, 0.04059455916285515, -0.018941182643175125, 0.005579402670264244, 0.027421806007623672, -0.04165235534310341, 0.05884373560547829, -0.016004418954253197, 0.03367144241929054, -0.009356983006000519, 0.024722250178456306, 0.08076342195272446, -0.014172608032822609, -0.10619416832923889, 0.02524380572140217, -0.012148496694862843, -0.021560674533247948, 0.040306515991687775, 0.03633126989006996, 0.03580011799931526, 0.00413998169824481, -0.001498424680903554, 0.02498527429997921, -0.007831135764718056, 0.005373345222324133, -0.03814823180437088, -0.03653659671545029, -0.009619109332561493, -0.014900264330208302, -0.0012708414578810334, 0.041402801871299744, 0.09087146073579788, -0.05639440566301346, -0.033718038350343704, 0.007401160895824432, 0.023108497262001038, -0.018993927165865898, 0.0004086421395186335, 0.027595533058047295, 0.03464050590991974, 0.030703872442245483, -0.004417621064931154, -0.030318912118673325, 0.04649015888571739, 0.03533334657549858, 0.04848431795835495, 0.019838988780975342, -0.056688036769628525, 0.000814134837128222, 0.007315617986023426, -0.04638395458459854, -0.08458299189805984, 0.006371242459863424, 0.062151264399290085, 0.034669820219278336, -0.017625100910663605, 0.018903909251093864, 0.061576876789331436, -0.039979591965675354, 0.020023224875330925, -0.044751524925231934, -0.05393092334270477, -0.030607912689447403, -0.0390789732336998, -0.020991956815123558, 0.032464127987623215, 0.06073182821273804, 0.05904147028923035, 0.02807001583278179, 0.024298720061779022, 0.048957955092191696, -0.06001198664307594, -0.029614944010972977, 0.04110853001475334, 0.016651352867484093, 0.05146582052111626, -0.010923871770501137, -0.004668941721320152, 0.01633690670132637, -0.02332211844623089, -0.046547386795282364, -0.03311431035399437, -0.04208716005086899, 0.022878529503941536, 0.05243298411369324, -0.005246432963758707, -0.02993597649037838, 0.01568640023469925, -0.005546594969928265, 0.018500925973057747, -0.0012464415049180388, 0.09376304596662521, 0.029217053204774857, 0.020286718383431435, 0.027900520712137222, -0.036650702357292175, -0.039677321910858154, -0.019258063286542892, 0.010967863723635674, 0.030523233115673065, -0.027943408116698265, -0.04610898718237877, 0.01683679036796093, 0.015380281955003738, 0.021314233541488647, 0.03123888187110424, 0.04385370388627052, 0.05577981099486351, -0.018559901043772697, -0.01135737169533968, 0.028372354805469513, -0.004168277140706778, -0.03552832081913948, 0.01890852302312851, 0.05126853287220001, 0.0536031611263752, 0.00970267690718174, -0.009929672814905643, -0.007393079809844494, 0.04622462019324303, -0.004683159291744232, 0.02528693899512291, -0.034932345151901245, 0.05008920654654503, 0.024159781634807587, -0.035146936774253845, 0.01371692307293415, 0.11182903498411179, 0.0435766838490963, -0.0025265258736908436, -0.028681311756372452, -0.060492999851703644, 0.016162246465682983, 0.04017797112464905, 0.005799716338515282, 0.05327752232551575, -0.024207187816500664, 0.05597046762704849, -0.019591813907027245, 0.08384324610233307, 0.02132660709321499, -0.025152379646897316, 0.0029561917763203382, 0.010742345824837685, 0.010861183516681194, 0.016361458227038383, 0.00734696863219142, -0.004812902770936489, -0.012195393443107605, 0.0019307939801365137, 0.006968713365495205, 0.023513497784733772, 0.0340544618666172, 0.02563857100903988, -0.011072998866438866, 0.03014378994703293, 0.02258898690342903, -0.03876887261867523, -0.01600339077413082, -0.027510305866599083, 0.010310701094567776, -0.02242564782500267, -0.00924769788980484, -0.03371251001954079, 0.02498847059905529, -0.02791278064250946, 0.06566596031188965, -0.011731257662177086, -0.036568425595760345, 0.020106978714466095, -0.006443826016038656, 0.030925417318940163, -0.010371671058237553, -0.017780158668756485, -0.0010242362041026354, 0.03713198006153107, 0.02483559586107731, -0.023500166833400726, 0.026173772290349007, -0.043441273272037506, -0.036349955946207047, -0.07913710922002792, 0.006579319015145302, -0.03635178878903389, -0.023128481581807137, -0.0220212209969759, 0.03956495225429535, 0.053979627788066864, -0.04122129827737808, -0.03030429407954216, 0.025507181882858276, 0.03456895798444748, -0.0005819337675347924, 0.04093364253640175, 0.04682670161128044, -0.02606147900223732, 0.009067464619874954, 0.03706689551472664, -0.010786786675453186, -0.029977580532431602, 0.026454277336597443, -0.004737040959298611, 0.04684332758188248, -0.013266220688819885, -0.02484905533492565, -0.0015494778053835034, 0.05219079926609993, 0.010020673274993896, -0.004880717024207115, -0.022721098735928535, 0.04697700962424278, 0.017582856118679047, 0.026889510452747345, 0.03290587291121483, -0.007647122722119093, -0.02809525653719902, 0.00876144040375948, -0.02764872834086418, 0.01865297555923462, 0.01794557459652424, -0.03271302953362465, 0.019900307059288025, -0.04891129210591316, -0.046809371560811996, -0.02055165357887745, 0.024497998878359795, -0.036161087453365326, 0.013591619208455086, -0.01087429653853178, 0.02923325076699257, -0.022688215598464012, -0.03163539245724678, -0.03753647953271866, 0.01741657219827175, 0.02046927809715271, 0.0319693498313427, -0.054681941866874695, 0.10797253251075745, 0.01528866682201624, 0.021962404251098633, 0.06687236577272415, -0.06324625760316849, 0.0037806155160069466, -0.032183364033699036, -0.005959573667496443, -0.016190089285373688, -0.03671390563249588, 0.0545971617102623, -0.0932178869843483, -0.041508741676807404, 0.07256825268268585, -0.011580564081668854, -0.01770336925983429, 0.025779105722904205, 0.03188556432723999, 0.04428594559431076, 0.008537081070244312, -0.013395408168435097, 0.06442493200302124, 0.009340709075331688, 0.05512741953134537, -0.009041525423526764, 0.0010114788310602307, -0.015793347731232643, 0.045683808624744415, -0.029143251478672028, -0.014826171100139618, -0.04557761922478676, -0.016498442739248276, -0.03469634801149368, 0.006783321034163237, 0.018197206780314445, -0.03735634684562683, 0.03352690488100052, -0.0737638995051384, -0.007383024785667658, -0.0018541690660640597, 0.010027372278273106, -0.027511736378073692, 0.026102328673005104, 0.0462578721344471, -0.03525280952453613, -0.023055505007505417, -0.021081743761897087, 0.025930020958185196, 0.022432954981923103, -0.05412006750702858, -0.0009586625965312123, 0.03307931870222092, 0.047507841140031815, 0.04015766456723213, -0.00464224349707365, 0.014840647578239441, -0.017805861309170723, 0.009931223466992378, 0.0418628491461277, 0.10808677971363068, -0.0015516469720751047, -0.010642969980835915, -0.03072373941540718, -0.052564587444067, 0.02890741266310215, 0.01474585197865963, 0.018979253247380257, -0.018864011391997337, 0.007444396149367094, 0.0011784880189225078, 0.022507306188344955, 0.03723868727684021, 0.01798005774617195, -0.052915897220373154, -0.05026373639702797, -0.04880962520837784, -0.043230388313531876, -0.04469039663672447, -0.03985853120684624, 0.027624696493148804, -0.012163561768829823, -0.022768095135688782, -0.030050519853830338, 0.02025775797665119, 0.02285989187657833, 0.006900315172970295, -0.012112807482481003, 0.021019520238041878, 0.008459417149424553, -0.04627147316932678, 0.024540279060602188, -0.022678745910525322, -0.09217873215675354, 0.014096778817474842, 0.0011064744321629405, -0.062328316271305084, 0.0633145272731781, -0.04071398079395294, -0.0006586427334696054, -0.04644139111042023, -0.042901311069726944, -0.06501099467277527, -0.026822935789823532, 0.011301168240606785, 0.072869211435318, -0.019875062629580498, -0.07594473659992218, -0.044030413031578064, 0.023779001086950302, -0.022457480430603027, -0.024557573720812798, 0.006560116074979305, 0.024703839793801308, -0.0011358659248799086, 0.01793055050075054, 0.010321801528334618, 0.03236480802297592, -0.04644308239221573, -0.03931041434407234, -0.0013497652253136039, -0.03282902017235756, 0.055729351937770844, 0.0032007305417209864, 0.006426644511520863, -0.0016071165446192026, -0.041964635252952576, 0.02288026362657547, 0.006723703816533089, -0.007311370223760605, 0.025016168132424355, -0.01163587998598814, -0.002319358754903078, -0.025988969951868057, 0.0007294200477190316, 0.029608754441142082, -0.062429267913103104, 0.019047148525714874, -0.04525456205010414, -0.053484223783016205, 0.025613492354750633, -0.007468274794518948, 0.03372901678085327, -0.00012646980758290738, 0.0366295650601387, 0.07396384328603745, -0.09149998426437378, -0.06589039415121078, 0.023172251880168915, 0.03419734537601471, 0.0620536245405674, -0.05941474810242653, 0.02316231094300747, -0.02342962846159935, 0.019194267690181732, -0.010577213950455189, 0.06390495598316193, 0.013850991614162922, -0.09019524604082108, -0.030905086547136307, -0.0013666542945429683, -0.019116971641778946, -0.016247477382421494, 0.04273577779531479, -0.06996466219425201, -0.03940712660551071, 0.02364089898765087, 0.01940138079226017, 0.007281899452209473, 0.0482308454811573, -0.0261120293289423, -0.0001768705405993387, -0.01517483126372099, -0.020179616287350655, -0.008014910854399204, -0.010045423172414303, -0.03223123401403427, 0.058708835393190384, 0.047895584255456924, 0.012605349533259869, -0.0021030560601502657, 0.0017042899271473289, -0.03147067502140999, 0.0002739084593486041, 0.01922757178544998, 0.029616570100188255, -0.017669394612312317, 0.013745524920523167, -0.0005337447510100901, 0.00967287365347147, 0.038214311003685, -0.0018044232856482267, 0.04632312431931496, -0.0593392513692379, 0.0017287746304646134, 0.03931569308042526, -0.06997106969356537, -0.021695295348763466, -0.04975799843668938, 0.015449736267328262, -0.0009152651764452457, 0.01784266158938408, 0.016711676493287086, 0.003700836328789592, -0.05785645544528961, 0.048009660094976425, 0.07613738626241684, -0.02611214481294155, 0.004739518743008375, 0.029348237439990044, 0.038133133202791214, 0.011250153183937073, -0.015530731528997421, -0.034076955169439316, -0.0115952854976058, 0.07540932297706604]
+PASSED [ 61%]
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_empty_path
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_existing_report_name
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_invalid_path
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_invalid_report_name
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_malformed_data
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_partial_data
+unit_test/test_html_report_generator.py::TestHTMLReportGenerator::test_generate_valid_report
+unit_test/test_model_list_command.py::TestModelListCommand::test_execute_models_present PASSED [ 61%]File C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests\unit_test\output_report\test3.html salvato!
+PASSED [ 62%]PASSED [ 63%]PASSED [ 63%]PASSED [ 64%]FAILED [ 65%]File C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests\unit_test\output_report\test3.html salvato!
+
+unit_test\test_html_report_generator.py:69 (TestHTMLReportGenerator.test_generate_malformed_data)
+self = <test_html_report_generator.TestHTMLReportGenerator testMethod=test_generate_malformed_data>
+mock_file = <MagicMock name='open' id='1887426047632'>
+
+    @patch("builtins.open", new_callable=mock_open)
+    def test_generate_malformed_data(self, mock_file):
+        """
+        RG3: Lista malformata
+        """
+        malformed_data = [{"invalid_key": "no vuln"}]
+>       with self.assertRaises(Exception):
+E       AssertionError: Exception not raised
+
+unit_test\test_html_report_generator.py:76: AssertionError
+PASSED [ 65%]File C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests\unit_test\output_report\partial.html salvato!
+PASSED [ 66%]File C:\Users\Smart\IdeaProjects\LLM-SmartContractScanner\tests\unit_test\output_report\valid.html salvato!
+
+unit_test/test_model_list_command.py::TestModelListCommand::test_execute_no_models
+unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_invalid_apikey PASSED [ 67%]PASSED [ 68%]
+unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_invalid_modelname
+unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_invalid_url
+unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_long_prompt
+unit_test/test_openai_llm.py::TestOpenAILLM::test_generate_success
+unit_test/test_retrieval_engine.py::TestRetrievalEngine::test_get_similar_contracts_descriptor_or_embedder_error PASSED [ 68%]PASSED [ 69%]PASSED [ 70%]PASSED [ 70%]PASSED [ 71%]
+unit_test/test_retrieval_engine.py::TestRetrievalEngine::test_get_similar_contracts_http_error
+unit_test/test_retrieval_engine.py::TestRetrievalEngine::test_get_similar_contracts_invalid_json
+unit_test/test_retrieval_engine.py::TestRetrievalEngine::test_get_similar_contracts_success
+unit_test/test_run_command.py::TestRunCommand::test_execute_filepath_missing PASSED [ 72%]PASSED [ 72%]PASSED [ 73%]PASSED [ 74%]
+unit_test/test_run_command.py::TestRunCommand::test_execute_model_missing
+unit_test/test_run_command.py::TestRunCommand::test_execute_negative_limit
+unit_test/test_run_command.py::TestRunCommand::test_execute_success
+unit_test/test_run_command.py::TestRunCommand::test_execute_with_out_path
+unit_test/test_run_command.py::TestRunCommand::test_execute_zero_limit
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_invalid_parameter PASSED [ 75%]PASSED [ 75%]PASSED [ 76%]PASSED [ 77%]PASSED [ 77%]PASSED [ 78%]
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_invalid_source
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_missing_api_key
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_missing_api_key_baseurl
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_missing_baseurl
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_missing_model_name
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_missing_optional_params
+unit_test/test_set_model_command.py::TestSetModelCommand::test_execute_valid_model
+unit_test/test_utils.py::TestMapVulnerability::test_case_sensitivity PASSED [ 79%]PASSED [ 79%]PASSED [ 80%]PASSED [ 81%]✅ Modello impostato: gpt-4
+PASSED [ 81%]PASSED [ 82%]PASSED [ 83%]✅ Modello impostato: llama
+PASSED [ 84%]✅ Modello impostato: gpt-4
+
+unit_test/test_utils.py::TestMapVulnerability::test_edge_cases
+unit_test/test_utils.py::TestMapVulnerability::test_reverse_mappings
+unit_test/test_utils.py::TestMapVulnerability::test_standard_mappings
+unit_test/test_utils.py::TestLoadString::test_load_string_encoding_error PASSED [ 84%]PASSED    [ 85%]PASSED [ 86%]PASSED [ 86%]
+unit_test/test_utils.py::TestLoadString::test_load_string_file_not_found
+unit_test/test_utils.py::TestLoadString::test_load_string_success
+unit_test/test_utils.py::TestMergeVuln::test_merge_different_types PASSED [ 87%]PASSED [ 88%]PASSED [ 88%]PASSED [ 89%]
+unit_test/test_utils.py::TestMergeVuln::test_merge_empty_lists PASSED    [ 90%]
+unit_test/test_utils.py::TestMergeVuln::test_merge_no_duplicates PASSED  [ 90%]
+unit_test/test_utils.py::TestMergeVuln::test_merge_preserves_order PASSED [ 91%]
+unit_test/test_utils.py::TestMergeVuln::test_merge_with_duplicates PASSED [ 92%]
+unit_test/test_utils.py::TestGetValidFilepath::test_keyboard_interrupt
+unit_test/test_utils.py::TestGetValidFilepath::test_retry_after_directory
+unit_test/test_utils.py::TestGetValidFilepath::test_retry_after_file_not_found
+unit_test/test_utils.py::TestGetValidFilepath::test_valid_file
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_prompt_structure PASSED [ 93%]PASSED [ 93%]PASSED [ 94%]PASSED    [ 95%]
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_empty_code
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_file_not_found
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_json_decode_error
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_key_error
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_missing_detail_field
+unit_test/test_vuln_analysis.py::TestVulnAnalysis::test_get_vuln_analysis_success
+
+================== 3 failed, 141 passed in 598.47s (0:09:58) ==================
+PASSED [ 95%]PASSED [ 96%]PASSED [ 97%]PASSED [ 97%]PASSED [ 98%]PASSED [ 99%]PASSED [100%]

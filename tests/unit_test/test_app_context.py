@@ -10,8 +10,9 @@ class TestAppContext(unittest.TestCase):
     @patch("configuration.context.CodeDescriptor")
     @patch("configuration.context.EmbeddingModel")
     @patch("configuration.context.RetrievalEngine")
+    @patch("configuration.context.HTMLReportGenerator")
     def test_appcontext_initialization_success(
-            self, mock_retrieval, mock_embedder, mock_descriptor,
+            self, mock_report, mock_retrieval, mock_embedder, mock_descriptor,
             mock_vuln, mock_code, mock_factory, mock_config
     ):
         """
@@ -23,7 +24,8 @@ class TestAppContext(unittest.TestCase):
             "llm": {"source": "openai", "model_name": "gpt-4", "api_key": "key"},
             "embedding_model_name": "model",
             "embedder_model_device": "cpu",
-            "server_api_url": "http://fake.url"
+            "server_api_url": "http://fake.url",
+            "report_dir": "../../output_report"
         }
         mock_config.return_value = mock_config_instance
 
@@ -41,6 +43,7 @@ class TestAppContext(unittest.TestCase):
         mock_descriptor.assert_called_once()
         mock_embedder.assert_called_once()
         mock_retrieval.assert_called_once()
+        mock_report.assert_called_once()
 
     @patch("configuration.context.ConfigManager")
     def test_model_not_found_in_config(self, mock_config):

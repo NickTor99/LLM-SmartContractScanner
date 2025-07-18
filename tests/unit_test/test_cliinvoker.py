@@ -14,7 +14,9 @@ class TestCLIInvoker(unittest.TestCase):
             "--filepath", "contract.teal",
             "--model", "gpt-4",
             "--vuln-limit", "2",
-            "--contract-limit", "3"
+            "--contract-limit", "3",
+            "--out", 'report',
+
         ]
         cli = CLIInvoker()
         cli.set_command(args)
@@ -67,7 +69,8 @@ class TestCLIInvoker(unittest.TestCase):
             "set-model",
             "--model_name", "gpt-4",
             "--source", "openai",
-            "--api_key", "sk-test"
+            "--api_key", "sk-test",
+            "--base_url", "url_test"
         ]
         cli = CLIInvoker()
         cli.set_command(args)
@@ -91,7 +94,6 @@ class TestCLIInvoker(unittest.TestCase):
             "--model_name", "gpt-4",
             "--api_key", "sk-test"
         ]
-        cli = CLIInvoker()
         with self.assertRaises(SystemExit):
             cli.set_command(args)
 
@@ -100,8 +102,8 @@ class TestCLIInvoker(unittest.TestCase):
             "--model_name", "gpt-4",
             "--source", "openai"
         ]
-        cli.set_command(args)
-        self.assertIsInstance(cli.command, SetModelCommand)
+        with self.assertRaises(ValueError):
+            cli.set_command(args)
 
     def test_set_command_model_list(self):
         """
@@ -134,7 +136,7 @@ class TestCLIInvoker(unittest.TestCase):
 
     def test_run_missing_out_param(self):
         """
-        C13: run senza --out => errore di inizializzazione (parametro richiesto)
+        C13: run senza --out => Inizializzazione valida (parametro opzionale)
         """
         cli = CLIInvoker()
         args = [
@@ -144,6 +146,23 @@ class TestCLIInvoker(unittest.TestCase):
             "--vuln-limit", "1",
             "--contract-limit", "2"
         ]
+
+        cli.set_command(args)
+
+    def test_run_invalid_out_param(self):
+        """
+        C14: run con valore di --out non valido => Errore: il valore di --out non deve contenere caratteri speciali
+        """
+        cli = CLIInvoker()
+        args = [
+            "run",
+            "--filepath", "contract.teal",
+            "--model", "gpt-4",
+            "--vuln-limit", "1",
+            "--contract-limit", "2",
+            "--out", "<report>"
+        ]
+
         with self.assertRaises(SystemExit):
             cli.set_command(args)
 

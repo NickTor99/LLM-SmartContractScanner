@@ -35,12 +35,8 @@ class ReportGenerator(ABC):
 
         for i, result in enumerate(results):
             try:
-                analysis = result.get("analysis", "")
-                vulnerability = result.get("vulnerability", "Unknown")
-
-                if not analysis:
-                    logger.warning(f"[Entry {i}] Campo 'analysis' mancante o vuoto. Saltato.")
-                    continue
+                analysis = result.get("analysis")
+                vulnerability = result.get("vulnerability")
 
                 match_eval = pattern1.search(analysis)
                 if not match_eval:
@@ -60,18 +56,20 @@ class ReportGenerator(ABC):
                 match_vulnerable_code = pattern2.search(analysis)
                 if match_vulnerable_code:
                     entry["vulnerable_code"] = match_vulnerable_code.group(1).strip()
+                else:
+                    logger.warning(f"[Entry {i}] Nessun snippet vulnerabile trovato per '{vulnerability}'.")
 
                 match_secure_code = pattern3.search(analysis)
                 if match_secure_code:
                     entry["secure_code"] = match_secure_code.group(1).strip()
-                    logger.info(f"[Entry {i}] Codice sicuro rilevato ma manca snippet vulnerabile.")
                 else:
-                    logger.warning(f"[Entry {i}] Nessun codice trovato per '{vulnerability}'.")
+                    logger.warning(f"[Entry {i}] Nessun rimedio sicuro trovato per '{vulnerability}'.")
 
                 processed_data.append(entry)
 
             except Exception as e:
                 logger.error(f"[Entry {i}] Errore durante l'elaborazione: {e}", exc_info=True)
+                raise
 
         return processed_data
 
@@ -95,6 +93,7 @@ class ReportGenerator(ABC):
     def write(self, content: str, output_path: str):
         with open(output_path, "w") as f:
             f.write(content)
+        print(f"File {output_path} salvato!")
 
 
 

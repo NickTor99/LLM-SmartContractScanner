@@ -1,8 +1,8 @@
 # cli/invoker.py
 import argparse
+import re
 
 from cli.comands import *
-
 
 class CLIInvoker:
     def __init__(self):
@@ -55,7 +55,7 @@ class CLIInvoker:
             help="Numero di contratti simili da recuperare")
         run_parser.add_argument(
             "--out",
-            type=str,
+            type=valid_report_filename,
             help="Nome del file di report generato dall'analisi.",
             default=None
         )
@@ -92,3 +92,16 @@ class CLIInvoker:
         modellist_parser = subparsers.add_parser("model-list", help="Mostra le configurazioni correnti")
 
         return parser
+
+
+
+def valid_report_filename(value: str) -> str:
+    print(value)
+    # Definisci una regex per nomi di file validi cross-platform
+    if not re.match(r'^[\w,\s-]', value):
+        raise argparse.ArgumentTypeError(f"'{value}' non è un nome file valido.")
+    # Blocca nomi riservati su Windows
+    reserved = {"CON", "PRN", "AUX", "NUL", "COM1", "LPT1", "COM2", "LPT2"}
+    if value.split('.')[0].upper() in reserved:
+        raise argparse.ArgumentTypeError(f"'{value}' è un nome riservato.")
+    return value

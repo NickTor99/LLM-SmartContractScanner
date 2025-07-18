@@ -5,7 +5,7 @@ from cli.invoker import CLIInvoker
 
 class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
 
-    @patch("src.cli.comands.ConfigManager")
+    @patch("src.cli.comands.ConfigManager.add_model_config")
     @patch("src.cli.comands.LLMFactory.build")
     def test_set_model_valid_openai(self, mock_build, mock_config):
         """
@@ -26,7 +26,7 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli.run_command()
 
         mock_build.assert_called_once()
-        mock_config.return_value.add_model_config.assert_called_once()
+        mock_config.assert_called_once()
 
     def test_set_model_valid_openai_missing_ApiKey(self):
         """
@@ -41,9 +41,9 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
             "--base_url", "https://api.openai.com"
         ]
         cli = CLIInvoker()
-        cli.set_command(args)
 
         with self.assertRaises(ValueError):
+            cli.set_command(args)
             cli.run_command()
 
     def test_set_model_valid_openai_missing_Base_URL(self):
@@ -59,9 +59,9 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
             "--api_key", "sk-test"
         ]
         cli = CLIInvoker()
-        cli.set_command(args)
 
         with self.assertRaises(ValueError):
+            cli.set_command(args)
             cli.run_command()
 
     @patch("src.cli.comands.LLMFactory.build")

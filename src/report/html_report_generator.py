@@ -61,3 +61,4 @@ class HTMLReportGenerator(ReportGenerator):
 
         return html_content
 
+

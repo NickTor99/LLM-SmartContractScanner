@@ -16,11 +16,14 @@ def get_abs_path(file):
 
 class TestSystemMain(unittest.TestCase):
 
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_valid_contract(self, mock_stdout):
-        main(["run", "--filepath", get_abs_path("valid.teal"), "--model", "deepseek-chat"])
-        output = mock_stdout.getvalue()
-        self.assertIn("Analisi completata", output)
+    def test_valid_contract(self):
+        output_path = os.path.join(os.path.dirname(__file__), "../../output_report/valid_contract_report.html")
+        main(["run", "--filepath", get_abs_path("valid.teal"), "--model", "deepseek-chat", "--out", "valid_contract_report"])
+
+        self.assertTrue(os.path.exists(output_path))
+
+        # Cleanup
+        os.remove(output_path)
 
     def test_empty_contract(self):
         log_stream = io.StringIO()
@@ -77,6 +80,20 @@ class TestSystemMain(unittest.TestCase):
         logs = log_stream.getvalue()
         logger.removeHandler(handler)
         self.assertIn("Error: Percorso", logs)
+
+
+    def test_out_not_valid(self):
+        with self.assertRaises(SystemExit):
+            main(["run", "--filepath", get_abs_path("valid.teal"), "--model", "deepseek-chat", "--out", "<report>"])
+
+    def test_run_without_out(self):
+        output_path = os.path.join(os.path.dirname(__file__), "../../output_report/valid.html")
+        main(["run", "--filepath", get_abs_path("valid.teal"), "--model", "deepseek-chat"])
+
+        self.assertTrue(os.path.exists(output_path))
+
+        # Cleanup
+        os.remove(output_path)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_model_list(self, mock_stdout):

@@ -57,7 +57,7 @@ class AppContext:
 
         logger.info(f"Vuln Analyzer impostato correttamente!")
 
-        self.report_generator = HTMLReportGenerator(out_dir=self.config.get('report_dir'))
+        self.report_generator = HTMLReportGenerator(out_dir=os.path.join(os.path.dirname(__file__), self.config.get('report_dir')))
 
     def get_code_analyzer(self) -> CodeAnalysis:
         return self.code_analyzer
