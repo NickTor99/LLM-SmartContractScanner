@@ -35,7 +35,8 @@ class TestConfigManager(unittest.TestCase):
         manager = ConfigManager()
         manager.save_config(config_data)
 
-        mock_file.assert_called_once_with(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../src/configuration/config.json")), "w")
+        mock_file.assert_called_once_with(os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                                                       "../../api_server/core/configuration/config.json")), "w")
         handle = mock_file()
         handle.write.assert_called()
 

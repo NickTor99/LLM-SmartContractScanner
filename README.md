@@ -46,7 +46,7 @@ docker run -p 6333:6333 niktor99/sc-vector-db:1.1
 ## 4. 🚀Run the Application
 ### Step 1: Run the API Server
 ```bash
-python vector_db_service/service_db.py
+python vector_db_service/server.py
 ```
 
 ### Step 2: Run the Application

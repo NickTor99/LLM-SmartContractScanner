@@ -1,5 +1,5 @@
 import unittest
-from src.llm.hf_llm import HFLLM  # importa qui la tua classe se ha un nome modulo diverso
+from cli_tool.llm.hf_llm import HFLLM  # importa qui la tua classe se ha un nome modulo diverso
 
 class TestHFLLM(unittest.TestCase):
 

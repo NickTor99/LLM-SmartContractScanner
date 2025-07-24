@@ -1,11 +1,9 @@
 import unittest
-import os
-from unittest.mock import patch, mock_open, MagicMock
+from unittest.mock import patch, mock_open
 import io
-import sys
 
 # Importa le tue funzioni qui (sostituisci con l'import corretto)
-from src.utils import map_vulnerability, load_string, merge_vuln, get_valid_filepath
+from api_server.core.utils import map_vulnerability, load_string, merge_vuln, get_valid_filepath
 
 class TestMapVulnerability(unittest.TestCase):
     def test_standard_mappings(self):

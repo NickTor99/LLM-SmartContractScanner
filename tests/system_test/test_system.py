@@ -3,7 +3,7 @@ import logging
 import sys
 import unittest
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../cli_tool')))
 from io import StringIO
 from unittest.mock import patch
 from main import main

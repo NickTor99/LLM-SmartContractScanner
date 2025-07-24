@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock, mock_open
 import json
 
-from src.analysis_module.vuln_analysis import VulnAnalysis  # Adatta al tuo path
+from cli_tool.analysis_package.vuln_analysis import VulnAnalysis  # Adatta al tuo path
 
 class TestVulnAnalysis(unittest.TestCase):
 

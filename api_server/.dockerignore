@@ -1,0 +1,5 @@
+../src/Dockerfile
+Dockerfile.base
+../api_server/core/configuration/config.json
+.pytest_cache
+.coverage

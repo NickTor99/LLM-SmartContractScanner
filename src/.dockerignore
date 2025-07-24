@@ -1,5 +1,0 @@
-Dockerfile
-Dockerfile.base
-configuration/config.json
-.pytest_cache
-.coverage

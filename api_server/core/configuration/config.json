@@ -1,0 +1,27 @@
+{
+    "server_api_url": "/api/search_vulns",
+    "embedding_model_name": "hkunlp/instructor-xl",
+    "embedding_device": "cpu",
+    "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
+    "report_dir": "../../output_report",
+    "llm": [
+        {
+            "source": "openai",
+            "model_name": "deepseek-chat",
+            "base_url": "https://api.deepseek.com",
+            "api_key": "sk-36dc60b2590248549d81a309aaf3f912"
+        },
+        {
+            "source": "huggingface",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": null,
+            "api_key": null
+        },
+        {
+            "source": "huggingface",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": "dsc",
+            "api_key": null
+        }
+    ]
+}

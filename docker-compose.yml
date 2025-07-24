@@ -37,7 +37,7 @@ services:
     volumes:
       - ./contracts:/data # Monta la cartella esterna con il codice da analizzare
       - ./output_report:/app/output_report # Monta la cartella esterna con i report delle analisi
-    working_dir: /app/src
+    working_dir: /app/cli_tool
     stdin_open: true
     tty: true
     entrypoint: ["python", "cli_shell.py"]

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from src.retrieval_module.code_descriptor import CodeDescriptor
+from cli_tool.retrieval_package.code_descriptor import CodeDescriptor
 
 
 class TestCodeDescriptor(unittest.TestCase):

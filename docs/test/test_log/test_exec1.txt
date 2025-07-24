@@ -24,7 +24,7 @@ ________________________________________________________________________________
 
 self = <test_integration_retrieval_engine.TestRetrievalEngineIntegration testMethod=test_retrieval_empty_code>, mock_post = <MagicMock name='post' id='2521306273424'>
 
-    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    @patch("src.retrieval_package.retrieval_engine.requests.post")
     def test_retrieval_empty_code(self, mock_post):
         #Mock delle risposte di dipendenze esterne
         self.embedder.encode = MagicMock(return_value=[0.2, 0.4, 0.5]) #codice vuoto fa comunque restituire un vettore pieno
@@ -48,7 +48,7 @@ ________________________________________________________________________________
 self = <test_integration_vuln_analysis.TestCodeAnalysisIntegration testMethod=test_code_analysis_llm_failure>, mock_file = <MagicMock name='open' id='2521294757520'>
 mock_load_string = <MagicMock name='load_string' id='2521288589136'>
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("src.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",
@@ -67,7 +67,7 @@ E       AssertionError: Exception not raised
 
 tests\integration_test\test_integration_vuln_analysis.py:42: AssertionError
 -------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
-ERROR    src.analysis_module.vuln_analysis:vuln_analysis.py:34 Errore inatteso durante l'analisi della vulnerabilità: LLM crashed
+ERROR    src.analysis_package.vuln_analysis:vuln_analysis.py:34 Errore inatteso durante l'analisi della vulnerabilità: LLM crashed
 _______________________________________________________________________________________________ TestSystemMain.test_empty_contract ________________________________________________________________________________________________ 
 
 self = <test_system.TestSystemMain testMethod=test_empty_contract>, mock_stdout = <_io.StringIO object at 0x0000024B0878FBE0>
@@ -113,7 +113,7 @@ tests\system_test\test_system.py:25: AssertionError
 ------------------------------------------------------------------------------------------------------ Captured stderr call ------------------------------------------------------------------------------------------------------- 
 Error during conversion: ChunkedEncodingError(ProtocolError('Response ended prematurely'))
 -------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
-ERROR    src.retrieval_module.retrieval_engine:retrieval_engine.py:39 Errore nella richiesta HTTP al servizio di retrieval: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/search_vulns (Cause
+ERROR    src.retrieval_package.retrieval_engine:retrieval_engine.py:39 Errore nella richiesta HTTP al servizio di retrieval: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/search_vulns (Cause
 d by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024B095AE550>: Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione'))
 ______________________________________________________________________________________________ TestSystemMain.test_invalid_contract _______________________________________________________________________________________________ 
 
@@ -161,7 +161,7 @@ be present\n\n**Note:** This is a deliberately invalid contract for testing purp
 
 tests\system_test\test_system.py:31: AssertionError
 -------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
-ERROR    src.retrieval_module.retrieval_engine:retrieval_engine.py:39 Errore nella richiesta HTTP al servizio di retrieval: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/search_vulns (Cause
+ERROR    src.retrieval_package.retrieval_engine:retrieval_engine.py:39 Errore nella richiesta HTTP al servizio di retrieval: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/search_vulns (Cause
 d by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000024B08F8CE50>: Failed to establish a new connection: [WinError 10061] Impossibile stabilire la connessione. Rifiuto persistente del computer di destinazione'))
 _______________________________________________________________________________________________ TestHFLLM.test_generate_long_prompt _______________________________________________________________________________________________ 
 
@@ -238,7 +238,7 @@ E       AssertionError: False is not true
 
 tests\unit_test\test_embedding_model.py:28: AssertionError
 -------------------------------------------------------------------------------------------------------- Captured log call -------------------------------------------------------------------------------------------------------- 
-ERROR    src.retrieval_module.embedding_model:embedding_model.py:36 Errore durante la generazione dell'embedding: Encoding error
+ERROR    src.retrieval_package.embedding_model:embedding_model.py:36 Errore durante la generazione dell'embedding: Encoding error
 ___________________________________________________________________________________________ TestOpenAILLM.test_generate_invalid_apikey ____________________________________________________________________________________________ 
 
 self = <test_openai_llm.TestOpenAILLM testMethod=test_generate_invalid_apikey>
@@ -885,7 +885,7 @@ ________________________________________________________________________________
 
 self = <test_retrieval_engine.TestRetrievalEngine testMethod=test_get_similar_contracts_http_error>, mock_post = <MagicMock name='post' id='2521299266640'>
 
-    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    @patch("src.retrieval_package.retrieval_engine.requests.post")
     def test_get_similar_contracts_http_error(self, mock_post):
         mock_post.side_effect = Exception("HTTP error")
 
@@ -894,7 +894,7 @@ self = <test_retrieval_engine.TestRetrievalEngine testMethod=test_get_similar_co
 
 tests\unit_test\test_retrieval_engine.py:50:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-src\retrieval_module\retrieval_engine.py:36: in get_similar_contracts
+src\retrieval_package\retrieval_engine.py:36: in get_similar_contracts
     response = requests.post(self.url, json={"vector": vector}, timeout=10)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ..\..\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1124: in __call__
@@ -922,7 +922,7 @@ ________________________________________________________________________________
 
 self = <test_vuln_analysis.TestVulnAnalysis testMethod=test_get_vuln_analysis_empty_code>, mock_file = <MagicMock name='open' id='2521295568720'>, mock_load_string = <MagicMock name='load_string' id='2521360105808'>
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("src.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",

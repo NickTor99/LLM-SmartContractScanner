@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from src.cli.invoker import CLIInvoker
+from cli_tool.cli.invoker import CLIInvoker
 
 
 class TestIntegrationCLIInvokerModelListCommand(unittest.TestCase):

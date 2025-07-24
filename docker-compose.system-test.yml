@@ -20,6 +20,8 @@ services:
     environment:
       - QDRANT_URL=http://qdrant_db:6333
       - API_ENV=production
+    volumes:
+      - ./api_server:/app/api_server
     depends_on:
       - qdrant
     networks:
@@ -34,10 +36,9 @@ services:
       - analysis_network
     environment:
       - API_URL=http://api_server:8000
-      - PYTHON=/app/src
+      - PYTHON=/app/cli_tool
     volumes:
       - ./tests/system_test:/app/tests/system_test  # Mount dei test di sistema
-      - ./src:/app/src
       - ./output_report:/app/output_report # Monta la cartella esterna con i report delle analisi
     working_dir: /app
     entrypoint: [ "/bin/sh", "-c", "pip install pytest && pytest tests/system_test" ]

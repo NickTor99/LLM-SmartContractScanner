@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from src.retrieval_module.retrieval_engine import RetrievalEngine
+from cli_tool.retrieval_package.retrieval_engine import RetrievalEngine
 from requests.models import Response
 import json
 

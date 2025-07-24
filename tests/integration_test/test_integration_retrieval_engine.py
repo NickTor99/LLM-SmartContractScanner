@@ -4,9 +4,9 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from src.retrieval_module.retrieval_engine import RetrievalEngine
-from src.retrieval_module.embedding_model import EmbeddingModel
-from src.retrieval_module.code_descriptor import CodeDescriptor
+from cli_tool.retrieval_package.retrieval_engine import RetrievalEngine
+from cli_tool.retrieval_package.embedding_model import EmbeddingModel
+from cli_tool.retrieval_package.code_descriptor import CodeDescriptor
 from requests.models import Response
 
 class TestRetrievalEngineIntegration(unittest.TestCase):

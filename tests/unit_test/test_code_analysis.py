@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from src.analysis_module.code_analysis import CodeAnalysis  # adatta l'import se il path è diverso
+from cli_tool.analysis_package.code_analysis import CodeAnalysis  # adatta l'import se il path è diverso
 
 class TestCodeAnalysis(unittest.TestCase):
     def setUp(self):

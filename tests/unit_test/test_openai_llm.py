@@ -1,5 +1,5 @@
 import unittest
-from src.llm.openai_llm import OpenAILLM  # cambia con il path corretto
+from cli_tool.llm.openai_llm import OpenAILLM  # cambia con il path corretto
 from openai import OpenAI, AuthenticationError, APIConnectionError, BadRequestError
 from openai import OpenAIError
 

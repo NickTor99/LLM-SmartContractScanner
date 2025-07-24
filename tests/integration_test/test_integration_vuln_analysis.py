@@ -1,7 +1,7 @@
 import json
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
-from src.analysis_module.vuln_analysis import VulnAnalysis
+from cli_tool.analysis_package.vuln_analysis import VulnAnalysis
 
 
 class TestCodeAnalysisIntegration(unittest.TestCase):
