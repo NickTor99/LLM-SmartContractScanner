@@ -1,7 +1,6 @@
 import json
 from typing import List
 import requests
-from requests import Response
 import logging
 from api_server.core.retrieval_package.code_descriptor import CodeDescriptor
 from api_server.core.retrieval_package.embedding_model import EmbeddingModel
@@ -12,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class RetrievalEngine:
-    def __init__(self, url: str, descriptor: CodeDescriptor, embedder: EmbeddingModel, num_retrieve=2):
+    def __init__(self, descriptor: CodeDescriptor, embedder: EmbeddingModel, num_retrieve=2, url: str=None):
         """
         Inizializza il modulo RetrievalEngine con l'URL di ricerca, descrittore e modello di embedding.
         """

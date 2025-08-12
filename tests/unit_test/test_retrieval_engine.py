@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-from cli_tool.retrieval_package.retrieval_engine import RetrievalEngine
+from api_server.core.retrieval_package.retrieval_engine import RetrievalEngine
 from requests.models import Response
 import json
 
@@ -27,42 +27,31 @@ class TestRetrievalEngine(unittest.TestCase):
             num_retrieve=2
         )
 
-    def create_fake_response(self, data, status=200):
-        response = Response()
-        response.status_code = status
-        response._content = json.dumps(data).encode('utf-8')
-        return response
-
-    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    @patch("api_server.core.retrieval_package.retrieval_engine.ContractSearcher.search_vulns")
     def test_get_similar_contracts_success(self, mock_post):
-        mock_post.return_value = self.create_fake_response({
-            "result": [
+        mock_post.return_value = [
                 {"vulnerability": "arbitrary_delete", "score": 0.9},
                 {"vulnerability": "rekey_to", "score": 0.85}
             ]
-        })
 
-        with patch("src.utils.map_vulnerability", side_effect=lambda x: x):
+        with patch("api_server.core.utils.map_vulnerability", side_effect=lambda x: x):
             results = self.engine.get_similar_contracts("contract code")
 
         self.assertEqual(results, ["Arbitrary delete", "Unchecked Rekey to"])
 
-    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    @patch("api_server.core.retrieval_package.retrieval_engine.ContractSearcher.search_vulns")
     def test_get_similar_contracts_http_error(self, mock_post):
-        mock_post.side_effect = requests.exceptions.RequestException()
+        mock_post.side_effect = mock_post.side_effect = Exception()
 
-        with self.assertRaises(requests.exceptions.RequestException):
+        with self.assertRaises(Exception):
             results = self.engine.get_similar_contracts("contract code")
 
 
-    @patch("src.retrieval_module.retrieval_engine.requests.post")
+    @patch("api_server.core.retrieval_package.retrieval_engine.ContractSearcher.search_vulns")
     def test_get_similar_contracts_invalid_json(self, mock_post):
-        response = Response()
-        response.status_code = 200
-        response._content = b"Not a JSON"
-        mock_post.return_value = response
+        mock_post.side_effect = mock_post.side_effect = Exception()
 
-        with self.assertRaises(JSONDecodeError):
+        with self.assertRaises(Exception):
             results = self.engine.get_similar_contracts("contract code")
 
 

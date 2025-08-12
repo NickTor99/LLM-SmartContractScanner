@@ -1,0 +1,152 @@
+PASSED              [ 61%]FAILED              [ 62%]
+test_run_controller.py:22 (TestRunController.test_RCo2)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_run_controller.TestRunController testMethod=test_RCo2>
+
+    def test_RCo2(self):
+        r = self._send_request("", "contract A {}", 5, 2)
+>       self.assertEqual(r.status_code, 422)
+
+test_run_controller.py:25: AssertionError
+FAILED              [ 63%]
+test_run_controller.py:26 (TestRunController.test_RCo3)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_run_controller.TestRunController testMethod=test_RCo3>
+
+    def test_RCo3(self):
+        r = self._send_request("gpt-4", "", 5, 2)
+>       self.assertEqual(r.status_code, 422)
+
+test_run_controller.py:29: AssertionError
+PASSED              [ 63%]FAILED              [ 64%]
+test_run_controller.py:34 (TestRunController.test_RCo5)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_run_controller.TestRunController testMethod=test_RCo5>
+
+    def test_RCo5(self):
+        r = self._send_request("gpt-4", "contract A {}", -1, 2)
+>       self.assertEqual(r.status_code, 422)
+
+test_run_controller.py:37: AssertionError
+PASSED              [ 65%]FAILED              [ 66%]
+test_run_controller.py:42 (TestRunController.test_RCo7)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_run_controller.TestRunController testMethod=test_RCo7>
+
+    def test_RCo7(self):
+        r = self._send_request("gpt-4", "contract A {}", 5, -1)
+>       self.assertEqual(r.status_code, 422)
+
+test_run_controller.py:45: AssertionError
+PASSED              [ 66%]FAILED              [ 67%]
+test_run_controller.py:50 (TestRunController.test_RCo9)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_run_controller.TestRunController testMethod=test_RCo9>
+
+    def test_RCo9(self):
+        r = self._send_request("", "", -1, -1)
+>       self.assertEqual(r.status_code, 422)
+
+test_run_controller.py:53: AssertionError
+
+
+PASSED    [ 76%]FAILED    [ 76%]
+test_setmodel_controller.py:22 (TestSetModelController.test_SCo2)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_setmodel_controller.TestSetModelController testMethod=test_SCo2>
+
+    def test_SCo2(self):
+        r = self._send_request("", "openai", "my_api_key", "https://api.openai.com")
+>       self.assertEqual(r.status_code, 422)
+
+test_setmodel_controller.py:25: AssertionError
+FAILED    [ 77%]
+test_setmodel_controller.py:26 (TestSetModelController.test_SCo3)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_setmodel_controller.TestSetModelController testMethod=test_SCo3>
+
+    def test_SCo3(self):
+        r = self._send_request("gpt-4", "not_valid_source", "my_api_key", "https://api.openai.com")
+>       self.assertEqual(r.status_code, 422)
+
+test_setmodel_controller.py:29: AssertionError
+FAILED    [ 78%]
+test_setmodel_controller.py:30 (TestSetModelController.test_SCo4)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_setmodel_controller.TestSetModelController testMethod=test_SCo4>
+
+    def test_SCo4(self):
+        r = self._send_request("gpt-4", "openai", "", "https://api.openai.com")
+>       self.assertEqual(r.status_code, 422)
+
+test_setmodel_controller.py:33: AssertionError
+PASSED    [ 79%]FAILED    [ 80%]
+test_setmodel_controller.py:38 (TestSetModelController.test_SCo6)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_setmodel_controller.TestSetModelController testMethod=test_SCo6>
+
+    def test_SCo6(self):
+        r = self._send_request("bert-base", "huggingface", "", "https://huggingface.co")
+>       self.assertEqual(r.status_code, 422)
+
+test_setmodel_controller.py:41: AssertionError
+FAILED    [ 80%]
+test_setmodel_controller.py:42 (TestSetModelController.test_SCo7)
+422 != 200
+
+Expected :200
+Actual   :422
+<Click to see difference>
+
+self = <test_setmodel_controller.TestSetModelController testMethod=test_SCo7>
+
+    def test_SCo7(self):
+        r = self._send_request("bert-base", "huggingface", "my_api_key", "")
+>       self.assertEqual(r.status_code, 422)
+
+test_setmodel_controller.py:45: AssertionError

@@ -1,16 +1,39 @@
+import json
 import unittest
+from io import StringIO
 from unittest.mock import patch, MagicMock
+
+from requests import Response
+
 from cli.comands import SetModelCommand
 
 
 class TestSetModelCommand(unittest.TestCase):
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
-    def test_execute_valid_model(self, mock_build, mock_config):
+
+    def setUp(self):
+        self.response = Response()
+        data = {
+            "status": "success",
+            "results": "✅ Modello impostato: gpt-4"
+        }
+
+        self.response._content = json.dumps(data).encode('utf-8')
+
+        self.response_fail = Response()
+        data = {
+            "status": "fail",
+            "results": "errore"
+        }
+
+        self.response_fail._content = json.dumps(data).encode('utf-8')
+
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_execute_valid_model(self, mock_stdout, mock_config):
         """
         Verifica che un modello valido venga costruito e salvato correttamente.
         """
-        mock_build.return_value = MagicMock()  # modello costruito correttamente
+        mock_config.return_value = self.response # modello costruito correttamente
 
         cmd = SetModelCommand(
             model_name="gpt-4",
@@ -20,10 +43,10 @@ class TestSetModelCommand(unittest.TestCase):
         )
         cmd.execute()
 
-        mock_build.assert_called_once()
-        mock_config.return_value.add_model_config.assert_called_once()
+        output = mock_stdout.getvalue()
+        self.assertIn("Modello impostato", output)
 
-    @patch("cli.comands.LLMFactory.build")
+    @patch("cli.comands.requests.post")
     def test_execute_invalid_source(self, mock_build):
         """
         Verifica che venga gestato correttamente un errore da LLMFactory.build().
@@ -38,24 +61,23 @@ class TestSetModelCommand(unittest.TestCase):
         with self.assertRaises(ValueError):
             cmd.execute()
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
-    def test_execute_missing_optional_params(self, mock_build, mock_config):
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_execute_missing_optional_params(self, mock_stdout, mock_config):
         """
         Verifica che il comando funzioni anche senza api_key e base_url (opzionali).
         """
-        mock_build.return_value = MagicMock()
+        mock_config.return_value = self.response
         cmd = SetModelCommand(
             model_name="llama",
             source="huggingface"
         )
         cmd.execute()
-        mock_build.assert_called_once()
-        mock_config.return_value.add_model_config.assert_called_once()
+        output = mock_stdout.getvalue()
+        self.assertIn("Modello impostato", output)
 
-
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
     def test_execute_missing_model_name(self, mock_build, mock_config):
         """
         Verifica che venga sollevato un errore se il nome del modello è mancante.
@@ -73,8 +95,8 @@ class TestSetModelCommand(unittest.TestCase):
         with self.assertRaises(ValueError):
             cmd.execute()
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
     def test_execute_invalid_parameter(self, mock_build, mock_config):
         """
         Verifica che venga sollevato un errore se la sorgente non è valida.
@@ -92,8 +114,8 @@ class TestSetModelCommand(unittest.TestCase):
         with self.assertRaises(ValueError):
             cmd.execute()
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
     def test_execute_missing_api_key(self, mock_build, mock_config):
         """
         Verifica che venga sollevato un errore se manca Api-Key.
@@ -111,13 +133,13 @@ class TestSetModelCommand(unittest.TestCase):
         with self.assertRaises(ValueError):
             cmd.execute()
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
-    def test_execute_missing_api_key_baseurl(self, mock_build, mock_config):
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_execute_missing_api_key_baseurl(self, mock_stdout, mock_build):
         """
         Verifica che un modello valido venga costruito e salvato correttamente.
         """
-        mock_build.return_value = MagicMock()  # modello costruito correttamente
+        mock_build.return_value = self.response  # modello costruito correttamente
 
         cmd = SetModelCommand(
             model_name="gpt-4",
@@ -127,11 +149,11 @@ class TestSetModelCommand(unittest.TestCase):
         )
         cmd.execute()
 
-        mock_build.assert_called_once()
-        mock_config.return_value.add_model_config.assert_called_once()
+        output = mock_stdout.getvalue()
+        self.assertIn("Modello impostato", output)
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
     def test_execute_missing_api_key(self, mock_build, mock_config):
         """
         Verifica che venga sollevato un errore se manca Api-Key.
@@ -151,8 +173,8 @@ class TestSetModelCommand(unittest.TestCase):
 
 
 
-    @patch("cli.comands.ConfigManager")
-    @patch("cli.comands.LLMFactory.build")
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
     def test_execute_missing_baseurl(self, mock_build, mock_config):
         """
         Verifica che venga sollevato un errore se manca baseurl.

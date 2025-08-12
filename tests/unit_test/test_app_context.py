@@ -1,18 +1,17 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from configuration.context import AppContext
+from api_server.core.configuration.context import AppContext
 
 class TestAppContext(unittest.TestCase):
-    @patch("configuration.context.ConfigManager")
-    @patch("configuration.context.LLMFactory")
-    @patch("configuration.context.CodeAnalysis")
-    @patch("configuration.context.VulnAnalysis")
-    @patch("configuration.context.CodeDescriptor")
-    @patch("configuration.context.EmbeddingModel")
-    @patch("configuration.context.RetrievalEngine")
-    @patch("configuration.context.HTMLReportGenerator")
+    @patch("api_server.core.configuration.context.ConfigManager")
+    @patch("api_server.core.configuration.context.LLMFactory")
+    @patch("api_server.core.configuration.context.CodeAnalysis")
+    @patch("api_server.core.configuration.context.VulnAnalysis")
+    @patch("api_server.core.configuration.context.CodeDescriptor")
+    @patch("api_server.core.configuration.context.EmbeddingModel")
+    @patch("api_server.core.configuration.context.RetrievalEngine")
     def test_appcontext_initialization_success(
-            self, mock_report, mock_retrieval, mock_embedder, mock_descriptor,
+            self, mock_retrieval, mock_embedder, mock_descriptor,
             mock_vuln, mock_code, mock_factory, mock_config
     ):
         """
@@ -43,9 +42,8 @@ class TestAppContext(unittest.TestCase):
         mock_descriptor.assert_called_once()
         mock_embedder.assert_called_once()
         mock_retrieval.assert_called_once()
-        mock_report.assert_called_once()
 
-    @patch("configuration.context.ConfigManager")
+    @patch("api_server.core.configuration.context.ConfigManager")
     def test_model_not_found_in_config(self, mock_config):
         """
         Verifica che venga sollevata un'eccezione se il modello non è presente nella configurazione.
@@ -58,7 +56,7 @@ class TestAppContext(unittest.TestCase):
             AppContext(model="unknown", vuln_limit=1, contract_limit=2)
 
 
-    @patch("configuration.context.ConfigManager")
+    @patch("api_server.core.configuration.context.ConfigManager")
     def test_model_negative_vuln_limit(self, mock_config):
         """
         Verifica che venga sollevata un'eccezione se Vuln limit è negativo.
@@ -71,7 +69,7 @@ class TestAppContext(unittest.TestCase):
             AppContext(model="gpt-4", vuln_limit=-1, contract_limit=2)
 
 
-    @patch("configuration.context.ConfigManager")
+    @patch("api_server.core.configuration.context.ConfigManager")
     def test_model_negative_contract_limit(self, mock_config):
         """
         Verifica che venga sollevata un'eccezione se Contract limit è negativo.
@@ -83,7 +81,7 @@ class TestAppContext(unittest.TestCase):
         with self.assertRaises(ValueError):
             AppContext(model="gpt-4", vuln_limit=1, contract_limit=-2)
 
-    @patch("configuration.context.ConfigManager")
+    @patch("api_server.core.configuration.context.ConfigManager")
     def test_model_negative_zero_vulnerability(self, mock_config):
         """
         Verifica che venga sollevata un'eccezione se ci sono zero vulnerabilità.

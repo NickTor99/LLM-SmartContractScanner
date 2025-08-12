@@ -1,4 +1,4 @@
-from cli_tool.retrieval_package.embedding_model import EmbeddingModel
+from api_server.core.retrieval_package.embedding_model import EmbeddingModel
 import unittest
 from unittest.mock import patch, MagicMock
 

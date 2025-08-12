@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from cli_tool.analysis_package.code_analysis import CodeAnalysis  # adatta l'import se il path è diverso
+from api_server.core.analysis_package.code_analysis import CodeAnalysis  # adatta l'import se il path è diverso
 
 class TestCodeAnalysis(unittest.TestCase):
     def setUp(self):
@@ -8,7 +8,7 @@ class TestCodeAnalysis(unittest.TestCase):
         self.mock_llm = MagicMock()
         self.mock_llm.generate = MagicMock()
         # Patch load_string globally for each test
-        self.patcher = patch('src.analysis_module.code_analysis.load_string', return_value="Prompt di esempio")
+        self.patcher = patch('api_server.core.analysis_package.code_analysis.load_string', return_value="Prompt di esempio")
         self.mock_load_string = self.patcher.start()
 
     def tearDown(self):
@@ -21,7 +21,7 @@ class TestCodeAnalysis(unittest.TestCase):
 
     def test_init_failure(self):
         self.patcher.stop()  # interrompo patch attuale
-        with patch('src.analysis_module.code_analysis.load_string', side_effect=Exception("Errore")):
+        with patch('api_server.core.analysis_package.code_analysis.load_string', side_effect=Exception("Errore")):
             with self.assertRaises(RuntimeError):
                 CodeAnalysis(llm_model=self.mock_llm)
 

@@ -1,18 +1,41 @@
+import json
 import unittest
+from io import StringIO
 from unittest.mock import patch, MagicMock
+
+from requests import Response
+
 from cli.invoker import CLIInvoker
 
 
 class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
 
-    @patch("src.cli.comands.ConfigManager.add_model_config")
-    @patch("src.cli.comands.LLMFactory.build")
-    def test_set_model_valid_openai(self, mock_build, mock_config):
+    def setUp(self):
+        self.response = Response()
+        data = {
+            "status": "success",
+            "results": "✅ Modello impostato: gpt-4"
+        }
+
+        self.response._content = json.dumps(data).encode('utf-8')
+
+        self.response_fail = Response()
+        data = {
+            "status": "fail",
+            "results": "errore"
+        }
+
+        self.response_fail._content = json.dumps(data).encode('utf-8')
+
+
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_set_model_valid_openai(self,  mock_stdout, mock_response):
         """
         Test T1: Source = openai, tutti i parametri presenti.
         Verifica che il modello venga costruito e salvato nella configurazione.
         """
-        mock_build.return_value = MagicMock()
+        mock_response.return_value = self.response
 
         args = [
             "set-model",
@@ -25,8 +48,8 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli.set_command(args)
         cli.run_command()
 
-        mock_build.assert_called_once()
-        mock_config.assert_called_once()
+        output = mock_stdout.getvalue()
+        self.assertIn("Modello impostato", output)
 
     def test_set_model_valid_openai_missing_ApiKey(self):
         """
@@ -64,12 +87,13 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
             cli.set_command(args)
             cli.run_command()
 
-    @patch("src.cli.comands.LLMFactory.build")
-    def test_set_model_valid_huggingface(self, mock_build):
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_set_model_valid_huggingface(self, mock_stdout, mock_response):
         """
         Test T5 variante: Source = huggingface, parametri opzionali assenti.
         """
-        mock_build.return_value = MagicMock()
+        mock_response.return_value = self.response
 
         args = [
             "set-model",
@@ -80,15 +104,17 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli.set_command(args)
         cli.run_command()
 
-        mock_build.assert_called_once()
+        output = mock_stdout.getvalue()
+        self.assertIn("Modello impostato", output)
 
-    @patch("src.cli.comands.LLMFactory.build")
-    def test_set_model_valid_huggingface2(self, mock_build):
+    @patch("cli.comands.requests.post")
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_set_model_valid_huggingface2(self, mock_stdout, mock_response):
         """
         Test T5: Source = huggingface, parametri opzionali presenti e validi.
         """
 
-        mock_build.return_value = MagicMock()
+        mock_response.return_value = self.response
 
         args = [
             "set-model",
@@ -101,7 +127,8 @@ class TestIntegrationCLIInvokerSetModelCommand(unittest.TestCase):
         cli.set_command(args)
         cli.run_command()
 
-        mock_build.assert_called_once()
+        output = mock_stdout.getvalue()
+        self.assertIn("Modello impostato", output)
 
 
     def test_set_model_invalid_source(self):

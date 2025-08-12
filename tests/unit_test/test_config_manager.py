@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import mock_open, patch, MagicMock
 import json
-from configuration.config_manager import ConfigManager
+from api_server.core.configuration.config_manager import ConfigManager
 
 
 class TestConfigManager(unittest.TestCase):
@@ -75,11 +75,9 @@ class TestConfigManager(unittest.TestCase):
 
         # Assert
         expected_config = {
-            "server_api_url": "/api/search_vulns",
             "embedding_model_name": "hkunlp/instructor-xl",
             "embedding_device": "cpu",
             "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
-            "report_dir": "../../output_report",
             "llm": []
         }
 

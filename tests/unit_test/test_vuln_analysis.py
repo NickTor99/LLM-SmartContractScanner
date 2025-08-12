@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock, mock_open
 import json
 
-from cli_tool.analysis_package.vuln_analysis import VulnAnalysis  # Adatta al tuo path
+from api_server.core.analysis_package.vuln_analysis import VulnAnalysis  # Adatta al tuo path
 
 class TestVulnAnalysis(unittest.TestCase):
 
@@ -23,7 +23,7 @@ class TestVulnAnalysis(unittest.TestCase):
             "vulnerabilities": [self.vuln_details]
         }
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("api_server.core.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",
@@ -39,7 +39,7 @@ class TestVulnAnalysis(unittest.TestCase):
         self.assertEqual(result, "LLM response")
         self.mock_llm.generate.assert_called_once()
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("api_server.core.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",
@@ -69,7 +69,7 @@ class TestVulnAnalysis(unittest.TestCase):
         result = self.vuln_analysis.get_vuln_analysis(self.vuln_name, self.code)
         self.assertIn("Errore: Dettagli incompleti", result)
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("api_server.core.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",
@@ -89,7 +89,7 @@ class TestVulnAnalysis(unittest.TestCase):
             "attack_scenario": "scenario",
             "precondition": "precondizione"
         }
-        with patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt"):
+        with patch("api_server.core.analysis_package.vuln_analysis.load_string", return_value="System Prompt"):
             prompt = self.vuln_analysis._get_prompt("example", details, "code")
             self.assertIn("System Prompt", prompt)
             self.assertIn("desc", prompt)

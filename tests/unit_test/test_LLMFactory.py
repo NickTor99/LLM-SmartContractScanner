@@ -1,7 +1,7 @@
 import unittest
-from configuration.llm_factory import LLMFactory
-from llm.openai_llm import OpenAILLM
-from llm.hf_llm import HFLLM
+from api_server.core.configuration.llm_factory import LLMFactory
+from api_server.core.llm.openai_llm import OpenAILLM
+from api_server.core.llm.hf_llm import HFLLM
 
 
 class TestLLMFactory(unittest.TestCase):

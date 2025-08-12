@@ -1,7 +1,6 @@
 import unittest
-from cli_tool.llm.openai_llm import OpenAILLM  # cambia con il path corretto
-from openai import OpenAI, AuthenticationError, APIConnectionError, BadRequestError
-from openai import OpenAIError
+from api_server.core.llm.openai_llm import OpenAILLM  # cambia con il path corretto
+from openai import AuthenticationError, APIConnectionError, BadRequestError
 
 class TestOpenAILLM(unittest.TestCase):
     def setUp(self):

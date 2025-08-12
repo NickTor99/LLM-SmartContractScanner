@@ -2,10 +2,11 @@ import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 import requests
+import logging
 
 from report.html_report_generator import HTMLReportGenerator
 
-
+logger = logging.getLogger(__name__)
 class Command(ABC):
     @abstractmethod
     def execute(self):

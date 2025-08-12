@@ -43,7 +43,6 @@ class AppContext:
         )
 
         self.retrieval_engine = RetrievalEngine(
-            url=f"{os.getenv('API_URL', 'http://localhost:8000')}{self.config.get('server_api_url')}",
             descriptor=code_descriptor,
             embedder=embedder,
             num_retrieve=self.config.get("contract_limit")

@@ -1,0 +1,4 @@
+from pyteal import *
+
+def approval()
+    return Approve()

@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from cli_tool.analysis_package.code_analysis import CodeAnalysis
+from api_server.core.analysis_package.code_analysis import CodeAnalysis
 
 
 class TestCodeAnalysisIntegration(unittest.TestCase):
-    @patch("src.analysis_module.code_analysis.load_string", return_value="Descrivi il seguente codice:")
+    @patch("api_server.core.analysis_package.code_analysis.load_string", return_value="Descrivi il seguente codice:")
     def setUp(self, mock):
         self.llm = MagicMock()
         self.analyzer = CodeAnalysis(llm_model=self.llm)

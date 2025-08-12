@@ -1,7 +1,7 @@
 import json
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
-from cli_tool.analysis_package.vuln_analysis import VulnAnalysis
+from api_server.core.analysis_package.vuln_analysis import VulnAnalysis
 
 
 class TestCodeAnalysisIntegration(unittest.TestCase):
@@ -9,7 +9,7 @@ class TestCodeAnalysisIntegration(unittest.TestCase):
         self.llm = MagicMock()
         self.analyzer = VulnAnalysis(llm_model=self.llm)
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("api_server.core.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",
@@ -25,7 +25,7 @@ class TestCodeAnalysisIntegration(unittest.TestCase):
         result = self.analyzer.get_vuln_analysis(code=code, vuln=vuln)
         self.assertIsInstance(result, str)
 
-    @patch("src.analysis_module.vuln_analysis.load_string", return_value="System Prompt")
+    @patch("api_server.core.analysis_package.vuln_analysis.load_string", return_value="System Prompt")
     @patch("builtins.open", new_callable=mock_open, read_data=json.dumps({
         "vulnerabilities": [{
             "name": "example_vuln",

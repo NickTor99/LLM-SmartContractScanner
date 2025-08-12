@@ -1,18 +1,30 @@
+import json
 import unittest
 from unittest.mock import patch
+
+from requests import Response
+
 from cli.comands import ModelListCommand
 
 
 class TestModelListCommand(unittest.TestCase):
-    @patch("cli.comands.ConfigManager")
+    @patch("cli.comands.requests.post")
     def test_execute_models_present(self, mock_config):
         """
         Verifica che vengano stampati i modelli presenti nella configurazione.
         """
-        mock_config.return_value.get_all_models.return_value = [
-            {"model_name": "gpt-4", "source": "openai"},
-            {"model_name": "llama", "source": "huggingface"}
-        ]
+        response = Response()
+        data = {
+            "status": "success",
+            "results": [
+                "Model name: gpt-4 -> from: openai",
+                "Model name: llama -> from: huggingface"
+            ]
+        }
+
+        response._content = json.dumps(data).encode('utf-8')
+
+        mock_config.return_value = response
 
         cmd = ModelListCommand()
 
@@ -21,12 +33,20 @@ class TestModelListCommand(unittest.TestCase):
             mock_print.assert_any_call("Model name: gpt-4 -> from: openai")
             mock_print.assert_any_call("Model name: llama -> from: huggingface")
 
-    @patch("cli.comands.ConfigManager")
+    @patch("cli.comands.requests.post")
     def test_execute_no_models(self, mock_config):
         """
         Verifica che il comando funzioni correttamente anche quando non ci sono modelli salvati.
         """
-        mock_config.return_value.get_all_models.return_value = []
+        response = Response()
+        data = {
+            "status": "success",
+            "results": []
+        }
+
+        response._content = json.dumps(data).encode('utf-8')
+
+        mock_config.return_value = response
 
         cmd = ModelListCommand()
 
