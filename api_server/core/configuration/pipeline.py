@@ -19,7 +19,7 @@ def run_pipeline(context: AppContext, source_code: str):
         ast.parse(source_code)
     except SyntaxError as e:
         logger.error(f"Errore di sintassi nel codice inserito: {e}")
-        return
+        raise SystemError(f"Errore di sintassi nel codice inserito: {e}")
 
     model_list = context.get_code_analyzer().get_possible_vulns(source_code)
     logger.info(f"\nL'analisi preliminare ha trovato le seguenti vulnerabilità: {model_list}\n")

@@ -118,6 +118,60 @@
             "model_name": "gpt-4",
             "base_url": "https://api.openai.com",
             "api_key": ""
+        },
+        {
+            "source": "openai",
+            "model_name": "gpt-4",
+            "base_url": "https://api.openai.com",
+            "api_key": "my_api_key"
+        },
+        {
+            "source": "openai",
+            "model_name": "gpt-4",
+            "base_url": "https://api.openai.com",
+            "api_key": ""
+        },
+        {
+            "source": "openai",
+            "model_name": "gpt-4",
+            "base_url": "https://api.openai.com",
+            "api_key": "my_api_key"
+        },
+        {
+            "source": "openai",
+            "model_name": "gpt-4",
+            "base_url": "https://api.openai.com",
+            "api_key": ""
+        },
+        {
+            "source": "openai",
+            "model_name": "gpt-4",
+            "base_url": "https://api.openai.com",
+            "api_key": "my_api_key"
+        },
+        {
+            "source": "huggingface",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": null,
+            "api_key": null
+        },
+        {
+            "source": "openai",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": "https://api.openai.com",
+            "api_key": "sk-dcdscds2cds2v2ds2"
+        },
+        {
+            "source": "huggingface",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": null,
+            "api_key": null
+        },
+        {
+            "source": "openai",
+            "model_name": "sshleifer/tiny-gpt2",
+            "base_url": "https://api.openai.com",
+            "api_key": "sk-dcdscds2cds2v2ds2"
         }
     ]
 }

@@ -13,6 +13,7 @@ class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
 
     def setUp(self):
         self.response = Response()
+        self.response.status_code = 200
         data = {
             "status": "success",
             "results": [
@@ -80,9 +81,10 @@ class TestIntegrationCLIInvokerRunCommand(unittest.TestCase):
         ]
         cli = CLIInvoker()
         cli.set_command(args)
-        cli.run_command()
+        with self.assertRaises(Exception):
+            cli.run_command()
 
-        mock_report.assert_not_called()
+
 
     @patch("cli.comands.requests.post")
     @patch("cli.comands.HTMLReportGenerator")

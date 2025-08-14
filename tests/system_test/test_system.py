@@ -37,7 +37,7 @@ class TestSystemMain(unittest.TestCase):
         logs = log_stream.getvalue()
         logger.removeHandler(handler)
 
-        self.assertIn("Codice è vuoto", logs)
+        self.assertIn("Status: 422", logs)
 
     @patch("sys.stdout", new_callable=StringIO)
     def test_invalid_contract(self, mock_stdout):
@@ -52,7 +52,7 @@ class TestSystemMain(unittest.TestCase):
         handler.flush()
         logs = log_stream.getvalue()
         logger.removeHandler(handler)
-        self.assertIn("Errore di sintassi", logs)
+        self.assertIn("Status: 500", logs)
 
     def test_file_not_found(self):
         log_stream = io.StringIO()

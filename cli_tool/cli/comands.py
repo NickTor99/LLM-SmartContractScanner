@@ -39,14 +39,18 @@ class RunCommand(Command):
             raise
         with open(path, 'r', encoding='utf-8') as f:
             code = f.read()
-
         payload = {
             "source_code": code,
             "model": self.model,
             "vuln_limit": self.vuln_limit,
             "contract_limit": self.contract_limit
         }
+
         response = requests.post(f"{os.getenv('API_URL', 'http://localhost:8000')}/api/run", json=payload)
+
+        if response.status_code != 200:
+            raise Exception(f"RunService Error: \n Status: {response.status_code} \n Details: {response.text}")
+
         results = response.json()["results"]
 
         report_generator = HTMLReportGenerator(out_dir=os.path.join(os.path.dirname(__file__), "../../output_report"))
