@@ -12,7 +12,7 @@ class ContractSearcher:
         self.collection_name = collection_name
 
         # initialize Qdrant client
-        self.qdrant_client = QdrantClient(url_db)
+        self.qdrant_client = QdrantClient(url_db,check_compatibility=False)
 
 
     def search_vulns(self, vector: list) -> list:

@@ -2,8 +2,8 @@
 import ast
 import logging
 
-from api_server.core.configuration.context import AppContext
-from api_server.core.utils import merge_vuln, map_vulnerability
+from core.configuration.context import AppContext
+from core.utils import merge_vuln, map_vulnerability
 
 logger = logging.getLogger(__name__)
 

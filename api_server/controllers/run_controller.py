@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
-from api_server.api.schemas import RunRequest
-from api_server.services.run_service import RunService
+from api.schemas import RunRequest
+from services.run_service import RunService
 
 router = APIRouter()
 run_service = RunService()

@@ -1,6 +1,6 @@
 import logging
-from api_server.core.llm.llm_model import LLMModel
-from api_server.core.utils import load_string
+from core.llm.llm_model import LLMModel
+from core.utils import load_string
 
 logger = logging.getLogger(__name__)
 

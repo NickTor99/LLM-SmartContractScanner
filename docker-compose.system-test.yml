@@ -13,7 +13,7 @@ services:
       - analysis_network
 
   api_server:
-    image: niktor99/api-server:latest  # Sostituisci con la tua immagine su Docker Hub
+    image: niktor99/api-base-image
     container_name: api_server
     ports:
       - "8000:8000"
@@ -26,12 +26,22 @@ services:
       - qdrant
     networks:
       - analysis_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    working_dir: /app
+    entrypoint: [ "/bin/sh", "-c", "python api_server/entrypoint.py" ]
+
+
 
   cli_tool:
-    image: niktor99/cli-base-image:latest  # Immagine pre-buildata
+    image: niktor99/cli-tool:latest
     container_name: cli_tool
     depends_on:
-      - api_server
+      api_server:
+        condition: service_healthy
     networks:
       - analysis_network
     environment:

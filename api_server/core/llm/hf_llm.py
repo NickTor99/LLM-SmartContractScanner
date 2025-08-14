@@ -1,4 +1,4 @@
-from api_server.core.llm.llm_model import LLMModel
+from core.llm.llm_model import LLMModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 import torch.cuda
 import logging

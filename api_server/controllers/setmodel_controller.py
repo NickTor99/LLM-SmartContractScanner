@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
-from api_server.api.schemas import SetModelRequest
-from api_server.services.setmodel_service import SetModelService
+from api.schemas import SetModelRequest
+from services.setmodel_service import SetModelService
 
 router = APIRouter()
 setmodel_service = SetModelService()

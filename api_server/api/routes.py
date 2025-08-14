@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from api_server.controllers import run_controller, setmodel_controller, modellist_controller
+from controllers import run_controller, setmodel_controller, modellist_controller
 import logging
 
-from api_server.vector_db_service.contract_searcher import ContractSearcher
+from vector_db_service.contract_searcher import ContractSearcher
 
 logger = logging.getLogger(__name__)
 

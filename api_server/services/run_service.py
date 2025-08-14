@@ -1,6 +1,6 @@
-from api_server.api.schemas import RunRequest
-from api_server.core.configuration.context import AppContext
-from api_server.core.configuration.pipeline import run_pipeline
+from api.schemas import RunRequest
+from core.configuration.context import AppContext
+from core.configuration.pipeline import run_pipeline
 
 
 class RunService:

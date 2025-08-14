@@ -1,13 +1,13 @@
 import logging
 import os
 
-from api_server.core.configuration.config_manager import ConfigManager
-from api_server.core.configuration.llm_factory import LLMFactory
-from api_server.core.analysis_package.code_analysis import CodeAnalysis
-from api_server.core.retrieval_package.code_descriptor import CodeDescriptor
-from api_server.core.retrieval_package.embedding_model import EmbeddingModel
-from api_server.core.retrieval_package.retrieval_engine import RetrievalEngine
-from api_server.core.analysis_package.vuln_analysis import VulnAnalysis
+from core.configuration.config_manager import ConfigManager
+from core.configuration.llm_factory import LLMFactory
+from core.analysis_package.code_analysis import CodeAnalysis
+from core.retrieval_package.code_descriptor import CodeDescriptor
+from core.retrieval_package.embedding_model import EmbeddingModel
+from core.retrieval_package.retrieval_engine import RetrievalEngine
+from core.analysis_package.vuln_analysis import VulnAnalysis
 
 logger = logging.getLogger(__name__)
 class AppContext:

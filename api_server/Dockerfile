@@ -1,6 +1,6 @@
 FROM niktor99/api-base-image:latest as final
 
-WORKDIR /api_server
+WORKDIR /app/api_server
 
 COPY . .
 

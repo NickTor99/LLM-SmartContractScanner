@@ -1,6 +1,6 @@
-from api_server.api.schemas import SetModelRequest
-from api_server.core.configuration.config_manager import ConfigManager
-from api_server.core.configuration.llm_factory import LLMFactory
+from api.schemas import SetModelRequest
+from core.configuration.config_manager import ConfigManager
+from core.configuration.llm_factory import LLMFactory
 
 
 class SetModelService:

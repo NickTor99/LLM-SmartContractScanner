@@ -2,10 +2,10 @@ import json
 from typing import List
 import requests
 import logging
-from api_server.core.retrieval_package.code_descriptor import CodeDescriptor
-from api_server.core.retrieval_package.embedding_model import EmbeddingModel
-from api_server.core.utils import map_vulnerability
-from api_server.vector_db_service.contract_searcher import ContractSearcher
+from core.retrieval_package.code_descriptor import CodeDescriptor
+from core.retrieval_package.embedding_model import EmbeddingModel
+from core.utils import map_vulnerability
+from vector_db_service.contract_searcher import ContractSearcher
 
 logger = logging.getLogger(__name__)
 

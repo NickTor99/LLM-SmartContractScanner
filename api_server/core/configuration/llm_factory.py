@@ -1,5 +1,5 @@
-from api_server.core.llm.hf_llm import HFLLM
-from api_server.core.llm.openai_llm import OpenAILLM
+from core.llm.hf_llm import HFLLM
+from core.llm.openai_llm import OpenAILLM
 
 class LLMFactory:
     @staticmethod

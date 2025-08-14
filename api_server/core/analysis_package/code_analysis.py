@@ -1,7 +1,7 @@
 import json
 import re
-from api_server.core.llm.llm_model import LLMModel
-from api_server.core.utils import load_string
+from core.llm.llm_model import LLMModel
+from core.utils import load_string
 import logging
 from typing import List
 
