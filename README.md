@@ -10,46 +10,40 @@ To run this project, make sure you have the following installed:
 
 - Python 3.9+
 - Docker
-- pip (Python package installer)
+- Docker Compose
 
-Install the dependencies:
+## 3. 📂 Preparazione dell’ambiente di lavoro
 
-```bash
-pip install -r requirements.txt.txt
-```
+1. **Creare una cartella di lavoro** sul proprio computer:
+   ```bash
+   mkdir contract-analysis
+   cd contract-analysis
 
-## 3. ⚙️Setup Instructions
+2. Copiare il file docker-compose.yml in questa cartella.
+Puoi scaricarlo o copiarlo direttamente dal testo fornito.
 
-### Step 1: Clone the repository
 
-```bash
-git clone https://github.com/NickTor99/LLM-SmartContractScanner.git
-```
+3. Creare le cartelle necessarie per input e output:
+    ```bash
+   mkdir contracts output_report
+   ```
 
-Move to proget directory
+    contracts/ → conterrà i file da analizzare
+    
+    output_report/ → conterrà i report generati
 
-```bash
-cd path/to/LLM-SmartContractScanner
-```
 
-### Step 2: Pull the Vector Database Docker Image (Qdrant)
+4. Inserire nella cartella contracts/ i file che si desidera analizzare.
 
-```bash
-docker pull niktor99/sc-vector-db:1.1
-```
+## 4. 🚀Avvio dei servizi
+Nella cartella di lavore eseguire:
+ ```bash
+   docker-compose up -d
+   ```
+Verranno avviati:
 
-### Step 3: Start the Database
-```bash
-docker run -p 6333:6333 niktor99/sc-vector-db:1.1
-```
+qdrant – database vettoriale
 
-## 4. 🚀Run the Application
-### Step 1: Run the API Server
-```bash
-python vector_db_service/server.py
-```
+api_server – server API
 
-### Step 2: Run the Application
-```bash
-python cli_shell.py
-```
+cli_tool – strumento a riga di comando
