@@ -3,8 +3,5 @@ fastapi
 uvicorn
 requests
 openai
-sentence_transformers
 numpy
-torch
 python-dotenv
-transformers

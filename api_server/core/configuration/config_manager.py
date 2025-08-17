@@ -11,10 +11,17 @@ class ConfigManager:
 
     def _create_default_config(self):
         default_config = {
-            "embedding_model_name": "hkunlp/instructor-xl",
+            "embedding_model_name": "hkunlp/instructor-large",
             "embedding_device": "cpu",
             "embedding_instruction": "Represent the semantic behavior of the smart contract for similarity-based retrieval.",
-            "llm": []
+            "llm": [
+                {
+                    "source": "openai",
+                    "model_name": "deepseek-chat",
+                    "base_url": "https://api.deepseek.com",
+                    "api_key": "sk-36dc60b2590248549d81a309aaf3f912"
+                },
+            ]
         }
         self.save_config(default_config)
 

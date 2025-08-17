@@ -13,7 +13,7 @@ services:
       - analysis_network
 
   api_server:
-    image: niktor99/api-server:latest  # Sostituisci con la tua immagine su Docker Hub
+    image: niktor99/api-server:latest
     container_name: api_server
     ports:
       - "8000:8000"
@@ -26,7 +26,7 @@ services:
       - analysis_network
 
   cli_tool:
-    image: niktor99/cli-tool:latest  # Immagine pre-buildata
+    image: niktor99/cli-tool:latest
     container_name: cli_tool
     depends_on:
       - api_server
@@ -35,7 +35,7 @@ services:
     environment:
       - API_URL=http://api_server:8000
     volumes:
-      - ./contracts:/data # Monta la cartella esterna con il codice da analizzare
+      - ./contracts:/app/contracts # Monta la cartella esterna con il codice da analizzare
       - ./output_report:/app/output_report # Monta la cartella esterna con i report delle analisi
     working_dir: /app/cli_tool
     stdin_open: true

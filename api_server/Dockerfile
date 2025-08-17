@@ -1,4 +1,4 @@
-FROM niktor99/api-base-image:latest as final
+FROM niktor99/api-base:latest as final
 
 WORKDIR /app/api_server
 

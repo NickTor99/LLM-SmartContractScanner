@@ -1,3 +1,4 @@
 contracts/*
 LLM-SmartContractScanner.iml
 .coverage
+api_server/core/configuration/config.json
