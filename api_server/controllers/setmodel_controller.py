@@ -6,7 +6,7 @@ router = APIRouter()
 setmodel_service = SetModelService()
 
 @router.post("/setmodel")
-def run_analysis(request: SetModelRequest):
+def control_request(request: SetModelRequest):
 
     if request.model_name == "":
         raise HTTPException(
@@ -41,4 +41,4 @@ def run_analysis(request: SetModelRequest):
                 detail="Per 'openai', api_key e base_url devono essere entrambi valorizzati."
             )
 
-    return setmodel_service.execute_run(request)
+    return setmodel_service.execute(request)

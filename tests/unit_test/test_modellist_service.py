@@ -12,7 +12,7 @@ class TestGetModelsService(unittest.TestCase):
         service = ModelListService()
 
         # Act
-        result = service.execute_run()
+        result = service.execute()
 
         # Assert
         self.assertEqual(result["status"], "success")
@@ -25,7 +25,7 @@ class TestGetModelsService(unittest.TestCase):
         service = ModelListService()
 
         # Act
-        result = service.execute_run()
+        result = service.execute()
 
         # Assert
         self.assertEqual(result["status"], "fail")

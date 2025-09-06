@@ -4,7 +4,7 @@ from core.configuration.pipeline import run_pipeline
 
 
 class RunService:
-    def execute_run(self, request: RunRequest):
+    def execute(self, request: RunRequest):
         try:
             context = AppContext(model=request.model, vuln_limit=request.vuln_limit, contract_limit=request.contract_limit)
             results = run_pipeline(context=context, source_code=request.source_code)

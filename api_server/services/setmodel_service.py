@@ -4,7 +4,7 @@ from core.configuration.llm_factory import LLMFactory
 
 
 class SetModelService:
-    def execute_run(self, request: SetModelRequest):
+    def execute(self, request: SetModelRequest):
         try:
             _ = LLMFactory.build(request.dict())
             config_manager = ConfigManager()

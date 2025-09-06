@@ -2,7 +2,7 @@ from core.configuration.config_manager import ConfigManager
 
 
 class ModelListService:
-    def execute_run(self):
+    def execute(self):
         try:
             config = ConfigManager()
             results = []

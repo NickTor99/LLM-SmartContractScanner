@@ -6,7 +6,7 @@ router = APIRouter()
 run_service = RunService()
 
 @router.post("/run")
-def run_analysis(request: RunRequest):
+def control_request(request: RunRequest):
     if request.model == "":
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -31,7 +31,7 @@ def run_analysis(request: RunRequest):
             detail="Il parametro contract_limit deve essere maggiore o uguale a zero."
         )
 
-    result = run_service.execute_run(request)
+    result = run_service.execute(request)
 
     if result["status"] == "success":
         return result

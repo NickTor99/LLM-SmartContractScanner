@@ -19,7 +19,7 @@ class TestRunService(unittest.TestCase):
         )
 
         # Act
-        result = service.execute_run(request)
+        result = service.execute(request)
 
         # Assert
         self.assertEqual(result["status"], "success")
@@ -39,7 +39,7 @@ class TestRunService(unittest.TestCase):
         )
 
         # Act
-        result = service.execute_run(request)
+        result = service.execute(request)
 
         # Assert
         self.assertEqual(result["status"], "fail")
